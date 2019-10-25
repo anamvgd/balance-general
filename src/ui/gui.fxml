@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.MenuButton?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="445.0" prefWidth="640.0" tabClosingPolicy="UNAVAILABLE" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/10.0.1">
+  <tabs>
+    <Tab text="Registro cuentas">
+      <content>
+        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+               <children>
+                  <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="485.0" prefWidth="679.0">
+                     <children>
+                        <Label layoutX="178.0" layoutY="26.0" text="INFORMES FINANCIEROS ">
+                           <font>
+                              <Font name="Consolas Bold" size="28.0" />
+                           </font>
+                        </Label>
+                        <Label layoutX="47.0" layoutY="78.0" text="Escriba el nombre de la cuenta:">
+                           <font>
+                              <Font name="Consolas" size="14.0" />
+                           </font>
+                        </Label>
+                        <TextField fx:id="nombreCuenta" layoutX="50.0" layoutY="109.0" prefHeight="17.0" prefWidth="139.0">
+                           <font>
+                              <Font name="Consolas" size="13.0" />
+                           </font>
+                        </TextField>
+                        <Label layoutX="47.0" layoutY="164.0" text="Seleccione el tipo de cuenta a ingresar:">
+                           <font>
+                              <Font name="Consolas" size="14.0" />
+                           </font>
+                        </Label>
+                        <MenuButton layoutX="50.0" layoutY="197.0" mnemonicParsing="false" text="Tipo de cuenta">
+                           <items>
+                              <MenuItem mnemonicParsing="false" text="Action 1" />
+                              <MenuItem mnemonicParsing="false" text="Action 2" />
+                           </items>
+                           <font>
+                              <Font name="Consolas" size="12.0" />
+                           </font>
+                        </MenuButton>
+                     </children>
+                  </Pane>
+               </children></AnchorPane>
+      </content>
+    </Tab>
+    <Tab text="Informes">
+      <content>
+        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+      </content>
+    </Tab>
+  </tabs>
+</TabPane>
