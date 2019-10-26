@@ -23,7 +23,7 @@ public class BalanceGeneral {
 
 	}
 
-	public void sumarActivos() {
+	public int sumarActivos() {
 
 		int activo = 0;
 
@@ -41,11 +41,11 @@ public class BalanceGeneral {
 
 		}
 
-		this.activos = activo;
+		return activo;
 
 	}
 
-	public void sumarPasivos() {
+	public int sumarPasivos() {
 
 		int pasivo = 0;
 
@@ -63,11 +63,11 @@ public class BalanceGeneral {
 
 		}
 
-		this.pasivos = pasivo;
+		return pasivo;
 
 	}
 
-	public void sumarPatrimonio() {
+	public int sumarPatrimonio() {
 
 		int patrimonio1 = 0;
 
@@ -85,7 +85,7 @@ public class BalanceGeneral {
 
 		}
 
-		this.patrimonio = patrimonio1;
+		return patrimonio1;
 
 	}
 
