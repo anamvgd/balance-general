@@ -57,6 +57,9 @@ public class BalanceGUI {
 
     @FXML
     private Label fechaLabel;
+    
+    @FXML
+    private Label infoLabelInicio;
 	
 	private BalanceGeneral bg;
 
@@ -143,13 +146,18 @@ public class BalanceGUI {
 	@FXML
 	void seleccionarCompaniaButton(ActionEvent event) {
 		
-		bg = new BalanceGeneral(listaEmpresasComboBox.getValue());
-		
-		nombreEmpresaLabel.setText(bg.getCompania());
+		if (listaEmpresasComboBox.getValue() == null) {
+			infoLabelInicio.setText("Seleccione una empresa para continuar");
+		}else {
+			bg = new BalanceGeneral(listaEmpresasComboBox.getValue());
+			
+			nombreEmpresaLabel.setText(bg.getCompania());
 
-		DateFormat formato = new SimpleDateFormat("dd/MMMM/YYYY");
-		String fecha = formato.format(bg.getFecha());
-		fechaLabel.setText(fecha);
+			DateFormat formato = new SimpleDateFormat("dd/MMMM/YYYY");
+			String fecha = formato.format(bg.getFecha());
+			fechaLabel.setText(fecha);
+		}
+		
 		
 		
 	}
