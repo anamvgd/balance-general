@@ -86,7 +86,7 @@ public class BalanceGUI {
 		fr.close();
 
 		ObservableList<String> list2 = FXCollections.observableArrayList("Activo", "Pasivo", "Patrimonio");
-		ObservableList<String> list3 = FXCollections.observableArrayList("Corriente", "No corriente", "No aplica");
+		ObservableList<String> list3 = FXCollections.observableArrayList("Corriente", "No_corriente", "No_aplica");
 
 		tipoCuentaComboBox.setItems(list2);
 		clasificacionComboBox.setItems(list3);
@@ -179,7 +179,7 @@ public class BalanceGUI {
 	}
 
 	@FXML
-	void seleccionarCompaniaButton(ActionEvent event) {
+	void seleccionarCompaniaButton(ActionEvent event) throws IOException {
 
 		if (listaEmpresasComboBox.getValue() == null || listaEmpresasComboBox.getValue().equals("")) {
 			infoLabelInicio.setText("Seleccione una empresa para continuar");
@@ -191,6 +191,8 @@ public class BalanceGUI {
 			DateFormat formato = new SimpleDateFormat("dd/MMMM/YYYY");
 			String fecha = formato.format(bg.getFecha());
 			fechaLabel.setText(fecha);
+			
+			bg.leerInfo();
 		}
 
 

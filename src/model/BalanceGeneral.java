@@ -1,11 +1,16 @@
 package model;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.StringTokenizer;
 
 public class BalanceGeneral {
 
@@ -98,7 +103,7 @@ public class BalanceGeneral {
 		return pasivo;
 
 	}
-	
+
 	public int sumarPasivosNoCorrientes() {
 
 		int pasivo = 0;
@@ -120,7 +125,7 @@ public class BalanceGeneral {
 		return pasivo;
 
 	}
-	
+
 	public int totalPasivos() {
 
 		return sumarPasivosCorrientes() + sumarPasivosNoCorrientes();
@@ -219,32 +224,103 @@ public class BalanceGeneral {
 	public ArrayList<Cuenta> getPatrimonio() {
 		return patrimonio;
 	}
-	
+
 	public void escribirInfo() throws IOException {
-		
+
 		FileWriter fileWriter = new FileWriter("Data/" + compania + ".txt", false);
 		BufferedWriter bw = new BufferedWriter(fileWriter);
 		PrintWriter out = new PrintWriter(bw);
-		
+
 		for (int i = 0; i < activos.size(); i++) {
-			out.print(activos.get(i).getNombre() + "," + activos.get(i).getValor() + "\t");
+			out.print(activos.get(i).getNombre() + " " + activos.get(i).getValor() + " " + activos.get(i).getClasificacion() + ",");
 		}
-		
+
 		out.println();
-		
+
 		for (int i = 0; i < pasivos.size(); i++) {
-			out.print(pasivos.get(i).getNombre() + "," + pasivos.get(i).getValor() + "\t");
+			out.print(pasivos.get(i).getNombre() + " " + pasivos.get(i).getValor() + " " + pasivos.get(i).getClasificacion() + ",");
 		}
-		
+
 		out.println();
-		
+
 		for (int i = 0; i < patrimonio.size(); i++) {
-			out.print(patrimonio.get(i).getNombre() + "," + patrimonio.get(i).getValor() + "\t");
+			out.print(patrimonio.get(i).getNombre() + " " + patrimonio.get(i).getValor() + " " + "No_Aplica" + ",");
+		}
+
+		out.println();
+
+		out.close();
+	}
+
+	public void leerInfo() throws IOException {
+
+		FileReader fr = new FileReader(new File("Data/" + compania + ".txt"));
+		BufferedReader br = new BufferedReader(fr);
+
+		String line = br.readLine();
+		String[] parts = line.split(",");
+		StringTokenizer st;
+
+		for (int i = 0; i < parts.length; i++) {
+
+			st = new StringTokenizer(parts[i]);
+
+			String nombreCuenta = st.nextToken();
+			int valorCuenta = Integer.valueOf(st.nextToken());
+			String clasificacionCuenta = st.nextToken();
+			boolean contra = false;
+			if (valorCuenta < 0) {
+				contra = true;
+			}
+
+			Cuenta nuevaCuenta = new Cuenta(nombreCuenta, "Activo", valorCuenta, clasificacionCuenta, contra);
+
+			activos.add(nuevaCuenta);
+
+		}
+
+		line = br.readLine();
+		parts = line.split(",");
+
+		for (int i = 0; i < parts.length; i++) {
+
+			st = new StringTokenizer(parts[i]);
+
+			String nombreCuenta = st.nextToken();
+			int valorCuenta = Integer.valueOf(st.nextToken());
+			String clasificacionCuenta = st.nextToken();
+			boolean contra = false;
+			if (valorCuenta < 0) {
+				contra = true;
+			}
+
+			Cuenta nuevaCuenta = new Cuenta(nombreCuenta, "Activo", valorCuenta, clasificacionCuenta, contra);
+
+			pasivos.add(nuevaCuenta);
+
 		}
 		
-		out.println();
-		
-		out.close();
+		line = br.readLine();
+		parts = line.split(",");
+
+		for (int i = 0; i < parts.length; i++) {
+
+			st = new StringTokenizer(parts[i]);
+
+			String nombreCuenta = st.nextToken();
+			int valorCuenta = Integer.valueOf(st.nextToken());
+			String clasificacionCuenta = st.nextToken();
+			boolean contra = false;
+			if (valorCuenta < 0) {
+				contra = true;
+			}
+
+			Cuenta nuevaCuenta = new Cuenta(nombreCuenta, "Activo", valorCuenta, clasificacionCuenta, contra);
+
+			patrimonio.add(nuevaCuenta);
+
+		}
+
 	}
 
 }
