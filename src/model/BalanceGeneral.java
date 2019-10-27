@@ -7,19 +7,15 @@ public class BalanceGeneral {
 
 	private String compania;
 	private Date fecha;
-	private ArrayList<Cuenta> cuentas;
-	private int activos;
-	private int pasivos;
-	private int patrimonio;
+	private ArrayList<Cuenta> activos;
+	private ArrayList<Cuenta> pasivos;
+	private ArrayList<Cuenta> patrimonio;
 
 	public BalanceGeneral(String compania) {
 
 		this.compania = compania;
 		this.fecha = new Date();
-		cuentas = new ArrayList<Cuenta>();
-		this.activos = 0;
-		this.pasivos = 0;
-		this.patrimonio = 0;
+		this.activos = new ArrayList<Cuenta>();
 
 	}
 
@@ -27,16 +23,12 @@ public class BalanceGeneral {
 
 		int activo = 0;
 
-		for (int i = 0; i < cuentas.size(); i++) {
+		for (int i = 0; i < activos.size(); i++) {
 
-			if (cuentas.get(i).getTipo().equalsIgnoreCase("Activo")) {
-
-				if (cuentas.get(i).isContraCuenta()) {
-					activo -= cuentas.get(i).getValor();
-				}else {
-					activo += cuentas.get(i).getValor();
-				}
-
+			if (activos.get(i).isContraCuenta()) {
+				activo -= activos.get(i).getValor();
+			}else {
+				activo += activos.get(i).getValor();
 			}
 
 		}
@@ -49,16 +41,12 @@ public class BalanceGeneral {
 
 		int pasivo = 0;
 
-		for (int i = 0; i < cuentas.size(); i++) {
+		for (int i = 0; i < pasivos.size(); i++) {
 
-			if (cuentas.get(i).getTipo().equalsIgnoreCase("Pasivo")) {
-
-				if (cuentas.get(i).isContraCuenta()) {
-					pasivo -= cuentas.get(i).getValor();
-				}else {
-					pasivo += cuentas.get(i).getValor();
-				}
-
+			if (pasivos.get(i).isContraCuenta()) {
+				pasivo -= pasivos.get(i).getValor();
+			}else {
+				pasivo += pasivos.get(i).getValor();
 			}
 
 		}
@@ -71,21 +59,64 @@ public class BalanceGeneral {
 
 		int patrimonio1 = 0;
 
-		for (int i = 0; i < cuentas.size(); i++) {
+		for (int i = 0; i < patrimonio.size(); i++) {
 
-			if (cuentas.get(i).getTipo().equalsIgnoreCase("Patrimonio")) {
-
-				if (cuentas.get(i).isContraCuenta()) {
-					patrimonio1 -= cuentas.get(i).getValor();
-				}else {
-					patrimonio1 += cuentas.get(i).getValor();
-				}
-
+			if (patrimonio.get(i).isContraCuenta()) {
+				patrimonio1 -= patrimonio.get(i).getValor();
+			}else {
+				patrimonio1 += patrimonio.get(i).getValor();
 			}
 
 		}
 
 		return patrimonio1;
+
+	}
+
+	public boolean cuentaExistente(String nombre, String tipo) {
+
+		boolean existe = false;
+
+		switch (tipo) {
+
+		case "Activo":
+
+			for (int i = 0; i < activos.size() && !existe; i++) {
+
+				if (activos.get(i).getNombre().equalsIgnoreCase(nombre)) {
+					existe = true;
+				}
+
+			}
+
+			break;
+
+		case "Pasivo":
+
+			for (int i = 0; i < pasivos.size() && !existe; i++) {
+
+				if (pasivos.get(i).getNombre().equalsIgnoreCase(nombre)) {
+					existe = true;
+				}
+
+			}
+
+			break;
+
+		default:
+
+			for (int i = 0; i < patrimonio.size() && !existe; i++) {
+
+				if (patrimonio.get(i).getNombre().equalsIgnoreCase(nombre)) {
+					existe = true;
+				}
+
+			}
+
+			break;
+		}
+
+		return existe;
 
 	}
 
@@ -105,21 +136,35 @@ public class BalanceGeneral {
 		this.fecha = fecha;
 	}
 
-	public ArrayList<Cuenta> getCuentas() {
-		return cuentas;
-	}
-
-	public int getActivos() {
+	public ArrayList<Cuenta> getActivos() {
 		return activos;
 	}
 
-	public int getPasivos() {
+	public ArrayList<Cuenta> getPasivos() {
 		return pasivos;
 	}
 
-	public int getPatrimonio() {
+	public ArrayList<Cuenta> getPatrimonio() {
 		return patrimonio;
 	}
 
-
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
