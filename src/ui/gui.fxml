@@ -2,6 +2,7 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.MenuButton?>
 <?import javafx.scene.control.MenuItem?>
@@ -19,19 +20,15 @@
       <content>
         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                <children>
-                  <ScrollPane fx:id="scrollPane" layoutX="369.0" layoutY="61.0" prefHeight="319.0" prefWidth="299.0">
-                    <content>
-                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="329.0" prefWidth="293.0" />
-                    </content>
-                  </ScrollPane>
-                  <Button layoutX="493.0" layoutY="404.0" mnemonicParsing="false" onAction="#seleccionarCompania" text="Seleccionar" />
+                  <Button layoutX="523.0" layoutY="133.0" mnemonicParsing="false" onAction="#seleccionarCompaniaButton" text="Seleccionar" />
                   <Label layoutX="29.0" layoutY="61.0" prefHeight="22.0" prefWidth="231.0" text="Agregar nueva compañia">
                      <font>
                         <Font name="Consolas Bold" size="18.0" />
                      </font>
                   </Label>
-                  <TextField fx:id="nuevaCompania" layoutX="29.0" layoutY="108.0" />
-                  <Button layoutX="29.0" layoutY="156.0" mnemonicParsing="false" onAction="#agregarCompania" text="Agregar" />
+                  <TextField fx:id="nuevaCompaniaTextField" layoutX="29.0" layoutY="108.0" />
+                  <Button layoutX="29.0" layoutY="156.0" mnemonicParsing="false" onAction="#agregarCompaniaButton" text="Agregar" />
+                  <ComboBox fx:id="listaEmpresasComboBox" layoutX="340.0" layoutY="133.0" prefWidth="150.0" promptText="Empresas" />
                </children></AnchorPane>
       </content>
     </Tab>
@@ -51,7 +48,7 @@
                               <Font name="Consolas" size="14.0" />
                            </font>
                         </Label>
-                        <TextField fx:id="nombreCuenta" layoutX="47.0" layoutY="123.0" prefHeight="17.0" prefWidth="139.0">
+                        <TextField fx:id="nombreCuentaTextField" layoutX="47.0" layoutY="123.0" prefHeight="17.0" prefWidth="139.0">
                            <font>
                               <Font name="Consolas" size="13.0" />
                            </font>
@@ -61,7 +58,7 @@
                               <Font name="Consolas" size="14.0" />
                            </font>
                         </Label>
-                        <MenuButton fx:id="tipoCuenta" layoutX="47.0" layoutY="202.0" mnemonicParsing="false" text="Tipo de cuenta">
+                        <MenuButton fx:id="tipoCuentaMenuButton" layoutX="47.0" layoutY="202.0" mnemonicParsing="false" text="Tipo de cuenta">
                            <items>
                               <MenuItem mnemonicParsing="false" text="Activo" />
                               <MenuItem mnemonicParsing="false" text="Pasivo" />
@@ -76,13 +73,13 @@
                               <Font name="Consolas" size="14.0" />
                            </font>
                         </Label>
-                        <TextField fx:id="valorCuenta" layoutX="47.0" layoutY="268.0" prefHeight="17.0" prefWidth="139.0">
+                        <TextField fx:id="valorCuentaTextField" layoutX="47.0" layoutY="268.0" prefHeight="17.0" prefWidth="139.0">
                            <font>
                               <Font name="Consolas" size="13.0" />
                            </font>
                         </TextField>
-                        <CheckBox fx:id="contraCuenta" layoutX="47.0" layoutY="330.0" mnemonicParsing="false" text="Contra cuenta" />
-                        <Button layoutX="47.0" layoutY="404.0" mnemonicParsing="false" onAction="#agregarCuenta" text="Registrar" />
+                        <CheckBox fx:id="contraCuentaCheckBox" layoutX="47.0" layoutY="330.0" mnemonicParsing="false" text="Contra cuenta" />
+                        <Button layoutX="47.0" layoutY="404.0" mnemonicParsing="false" onAction="#registrarCuentaButton" text="Registrar" />
                         <Label fx:id="infoLabel" layoutX="369.0" layoutY="93.0" prefHeight="36.0" prefWidth="279.0" />
                      </children>
                   </Pane>
@@ -91,7 +88,43 @@
     </Tab>
       <Tab text="Informes">
          <content>
-            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+               <children>
+                  <Label alignment="CENTER" contentDisplay="CENTER" layoutX="220.0" layoutY="7.0" prefHeight="32.0" prefWidth="240.0" text="BALANCE GENERAL">
+                     <font>
+                        <Font name="Consolas Bold" size="18.0" />
+                     </font>
+                  </Label>
+                  <Label alignment="CENTER" contentDisplay="CENTER" layoutX="220.0" layoutY="37.0" prefHeight="32.0" prefWidth="240.0">
+                     <font>
+                        <Font name="Consolas Bold" size="14.0" />
+                     </font>
+                  </Label>
+                  <Label alignment="CENTER" contentDisplay="CENTER" layoutX="220.0" layoutY="62.0" prefHeight="32.0" prefWidth="240.0" text="---------------">
+                     <font>
+                        <Font name="Consolas Bold" size="14.0" />
+                     </font>
+                  </Label>
+                  <ScrollPane layoutY="120.0" prefHeight="250.0" prefWidth="331.0">
+                    <content>
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="240.0" prefWidth="323.0" />
+                    </content>
+                  </ScrollPane>
+                  <ScrollPane layoutX="360.0" layoutY="114.0" prefHeight="111.0" prefWidth="317.0">
+                    <content>
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="109.0" prefWidth="307.0" />
+                    </content>
+                  </ScrollPane>
+                  <ScrollPane layoutX="360.0" layoutY="267.0" prefHeight="131.0" prefWidth="317.0">
+                     <content>
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="125.0" prefWidth="301.0" />
+                     </content>
+                  </ScrollPane>
+                  <Label layoutX="14.0" layoutY="94.0" text="ACTIVOS" />
+                  <Label layoutX="360.0" layoutY="245.0" text="PATRIMONIO" />
+                  <Label layoutX="360.0" layoutY="94.0" text="PASIVOS" />
+               </children>
+            </AnchorPane>
          </content>
       </Tab>
   </tabs>

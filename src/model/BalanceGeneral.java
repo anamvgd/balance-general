@@ -16,6 +16,8 @@ public class BalanceGeneral {
 		this.compania = compania;
 		this.fecha = new Date();
 		this.activos = new ArrayList<Cuenta>();
+		this.pasivos = new ArrayList<Cuenta>();
+		this.patrimonio = new ArrayList<Cuenta>();
 
 	}
 
