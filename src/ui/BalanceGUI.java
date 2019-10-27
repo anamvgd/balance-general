@@ -7,6 +7,10 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.EventListener;
+import java.util.logging.SimpleFormatter;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -34,7 +38,10 @@ public class BalanceGUI {
 	private TextField nombreCuentaTextField;
 
 	@FXML
-	private MenuButton tipoCuentaMenuButton;
+	private ComboBox<String> tipoCuentaComboBox;
+	
+	@FXML
+    private ComboBox<String> clasificacionComboBox;
 
 	@FXML
 	private TextField valorCuentaTextField;
@@ -44,6 +51,12 @@ public class BalanceGUI {
 
 	@FXML
 	private Label infoLabel;
+	
+	@FXML
+    private Label nombreEmpresaLabel;
+
+    @FXML
+    private Label fechaLabel;
 	
 	private BalanceGeneral bg;
 
@@ -67,6 +80,12 @@ public class BalanceGUI {
 
 		br.close();
 		fr.close();
+		
+		ObservableList<String> list2 = FXCollections.observableArrayList("Activo", "Pasivo", "Patrimonio");
+		ObservableList<String> list3 = FXCollections.observableArrayList("Corriente", "No corriente", "No aplica");
+		
+		tipoCuentaComboBox.setItems(list2);
+		clasificacionComboBox.setItems(list3);
 
 	}
 
@@ -74,11 +93,12 @@ public class BalanceGUI {
 	void registrarCuentaButton(ActionEvent event) {
 
 		String nombre = nombreCuentaTextField.getText();
-		String tipo = tipoCuentaMenuButton.getText();
+		String tipo = tipoCuentaComboBox.getValue();
 		int valor = Integer.valueOf(valorCuentaTextField.getText());
+		String clasificacion = clasificacionComboBox.getValue();
 		boolean contra = contraCuentaCheckBox.isSelected();
 
-		Cuenta nuevaCuenta = new Cuenta(nombre, tipo, valor, contra);
+		Cuenta nuevaCuenta = new Cuenta(nombre, tipo, valor, clasificacion, contra);
 
 		switch (tipo) {
 
@@ -89,7 +109,9 @@ public class BalanceGUI {
 			break;
 
 		case "Pasivo":
-
+			
+			
+			
 			break;
 
 		default:
@@ -123,7 +145,15 @@ public class BalanceGUI {
 		
 		bg = new BalanceGeneral(listaEmpresasComboBox.getValue());
 		
+		nombreEmpresaLabel.setText(bg.getCompania());
+
+		DateFormat formato = new SimpleDateFormat("dd/MMMM/YYYY");
+		String fecha = formato.format(bg.getFecha());
+		fechaLabel.setText(fecha);
+		
+		
 	}
+	
 
 }
 
