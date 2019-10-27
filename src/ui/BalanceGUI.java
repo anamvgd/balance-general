@@ -128,25 +128,36 @@ public class BalanceGUI {
 	void agregarCompaniaButton(ActionEvent event) throws IOException {
 
 		String nuevaCompania = nuevaCompaniaTextField.getText();
-
-		FileWriter fw = new FileWriter(PATH_EMPRESAS, true);
-		BufferedWriter bw = new BufferedWriter(fw);
-		PrintWriter out = new PrintWriter(bw);
-		out.println();
-		out.print(nuevaCompania);
-
-		out.close();
 		
-		initialize();
+		String ruta = "Data/" + nuevaCompania + ".txt";
+		File nuevoArchivo = new File(ruta);
 		
-		nuevaCompaniaTextField.setText("");
+		if (!nuevoArchivo.exists()) {
+			nuevoArchivo.createNewFile();
+			
+			FileWriter fw = new FileWriter(PATH_EMPRESAS, true);
+			BufferedWriter bw = new BufferedWriter(fw);
+			PrintWriter out = new PrintWriter(bw);
+			out.println();
+			out.print(nuevaCompania);
 
+			out.close();
+			
+			initialize();
+			
+			nuevaCompaniaTextField.setText("");
+		}else {
+			infoLabelInicio.setText("Empresa existente");
+		}
+
+		
+		
 	}
 
 	@FXML
 	void seleccionarCompaniaButton(ActionEvent event) {
 		
-		if (listaEmpresasComboBox.getValue() == null) {
+		if (listaEmpresasComboBox.getValue() == null && listaEmpresasComboBox.getValue().equals("")) {
 			infoLabelInicio.setText("Seleccione una empresa para continuar");
 		}else {
 			bg = new BalanceGeneral(listaEmpresasComboBox.getValue());
