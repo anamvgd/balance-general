@@ -7,6 +7,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.RandomAccessFile;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.EventListener;
@@ -39,9 +40,9 @@ public class BalanceGUI {
 
 	@FXML
 	private ComboBox<String> tipoCuentaComboBox;
-	
+
 	@FXML
-    private ComboBox<String> clasificacionComboBox;
+	private ComboBox<String> clasificacionComboBox;
 
 	@FXML
 	private TextField valorCuentaTextField;
@@ -50,17 +51,17 @@ public class BalanceGUI {
 	private CheckBox contraCuentaCheckBox;
 
 	@FXML
-	private Label infoLabel;
-	
-	@FXML
-    private Label nombreEmpresaLabel;
+	private Label infoLabelRegistro;
 
-    @FXML
-    private Label fechaLabel;
-    
-    @FXML
-    private Label infoLabelInicio;
-	
+	@FXML
+	private Label nombreEmpresaLabel;
+
+	@FXML
+	private Label fechaLabel;
+
+	@FXML
+	private Label infoLabelInicio;
+
 	private BalanceGeneral bg;
 
 	public void initialize() throws IOException {
@@ -83,43 +84,66 @@ public class BalanceGUI {
 
 		br.close();
 		fr.close();
-		
+
 		ObservableList<String> list2 = FXCollections.observableArrayList("Activo", "Pasivo", "Patrimonio");
 		ObservableList<String> list3 = FXCollections.observableArrayList("Corriente", "No corriente", "No aplica");
-		
+
 		tipoCuentaComboBox.setItems(list2);
 		clasificacionComboBox.setItems(list3);
 
 	}
 
 	@FXML
-	void registrarCuentaButton(ActionEvent event) {
-
-		String nombre = nombreCuentaTextField.getText();
-		String tipo = tipoCuentaComboBox.getValue();
-		int valor = Integer.valueOf(valorCuentaTextField.getText());
-		String clasificacion = clasificacionComboBox.getValue();
-		boolean contra = contraCuentaCheckBox.isSelected();
-
-		Cuenta nuevaCuenta = new Cuenta(nombre, tipo, valor, clasificacion, contra);
-
-		switch (tipo) {
-
-		case "Activo":
+	void registrarCuentaButton(ActionEvent event) throws IOException {
 
 
+		if (bg != null) {
 
-			break;
+			String nombre = nombreCuentaTextField.getText();
+			String tipo = tipoCuentaComboBox.getValue();
+			String clasificacion;
+			if (tipo.equalsIgnoreCase("Patrimonio")) {
+				clasificacion = "No aplica";
+			}else {
+				clasificacion = clasificacionComboBox.getValue();
+			}
 
-		case "Pasivo":
+			int valor = Integer.valueOf(valorCuentaTextField.getText());
+			boolean contra = contraCuentaCheckBox.isSelected();
 			
+			if (contra) {
+				valor = Math.negateExact(valor);
+			}
 			
-			
-			break;
 
-		default:
+			Cuenta nuevaCuenta = new Cuenta(nombre, tipo, valor, clasificacion, contra);
 
-			break;
+			switch (tipo) {
+
+			case "Activo":
+				
+				bg.getActivos().add(nuevaCuenta);
+				bg.escribirInfo();
+				
+				break;
+
+			case "Pasivo":
+
+				bg.getPasivos().add(nuevaCuenta);
+				bg.escribirInfo();
+
+				break;
+
+			default:
+
+				bg.getPatrimonio().add(nuevaCuenta);
+				bg.escribirInfo();
+				
+				break;
+			}
+
+		}else {
+			infoLabelRegistro.setText("Primero debe seleccionar una empresa");
 		}
 
 	}
@@ -128,13 +152,13 @@ public class BalanceGUI {
 	void agregarCompaniaButton(ActionEvent event) throws IOException {
 
 		String nuevaCompania = nuevaCompaniaTextField.getText();
-		
+
 		String ruta = "Data/" + nuevaCompania + ".txt";
 		File nuevoArchivo = new File(ruta);
-		
+
 		if (!nuevoArchivo.exists()) {
 			nuevoArchivo.createNewFile();
-			
+
 			FileWriter fw = new FileWriter(PATH_EMPRESAS, true);
 			BufferedWriter bw = new BufferedWriter(fw);
 			PrintWriter out = new PrintWriter(bw);
@@ -142,37 +166,37 @@ public class BalanceGUI {
 			out.print(nuevaCompania);
 
 			out.close();
-			
+
 			initialize();
-			
+
 			nuevaCompaniaTextField.setText("");
 		}else {
 			infoLabelInicio.setText("Empresa existente");
 		}
 
-		
-		
+
+
 	}
 
 	@FXML
 	void seleccionarCompaniaButton(ActionEvent event) {
-		
-		if (listaEmpresasComboBox.getValue() == null && listaEmpresasComboBox.getValue().equals("")) {
+
+		if (listaEmpresasComboBox.getValue() == null || listaEmpresasComboBox.getValue().equals("")) {
 			infoLabelInicio.setText("Seleccione una empresa para continuar");
 		}else {
 			bg = new BalanceGeneral(listaEmpresasComboBox.getValue());
-			
+
 			nombreEmpresaLabel.setText(bg.getCompania());
 
 			DateFormat formato = new SimpleDateFormat("dd/MMMM/YYYY");
 			String fecha = formato.format(bg.getFecha());
 			fechaLabel.setText(fecha);
 		}
-		
-		
-		
+
+
+
 	}
-	
+
 
 }
 

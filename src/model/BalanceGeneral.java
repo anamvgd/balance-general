@@ -1,5 +1,9 @@
 package model;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -21,17 +25,22 @@ public class BalanceGeneral {
 
 	}
 
-	public int sumarActivos() {
+	public int sumarActivosCorrientes() {
 
 		int activo = 0;
 
 		for (int i = 0; i < activos.size(); i++) {
 
-			if (activos.get(i).isContraCuenta()) {
-				activo -= activos.get(i).getValor();
-			}else {
-				activo += activos.get(i).getValor();
+			if (activos.get(i).getClasificacion().equalsIgnoreCase("Corriente")) {
+
+				if (activos.get(i).isContraCuenta()) {
+					activo -= activos.get(i).getValor();
+				}else {
+					activo += activos.get(i).getValor();
+				}
+
 			}
+
 
 		}
 
@@ -39,21 +48,82 @@ public class BalanceGeneral {
 
 	}
 
-	public int sumarPasivos() {
+	public int sumarActivosNoCorrientes() {
+
+		int activo = 0;
+
+		for (int i = 0; i < activos.size(); i++) {
+
+			if (activos.get(i).getClasificacion().equalsIgnoreCase("No Corriente")) {
+
+				if (activos.get(i).isContraCuenta()) {
+					activo -= activos.get(i).getValor();
+				}else {
+					activo += activos.get(i).getValor();
+				}
+
+			}
+
+
+		}
+
+		return activo;
+
+	}
+
+	public int totalActivos() {
+
+		return sumarActivosCorrientes() + sumarActivosNoCorrientes();
+
+	}
+
+	public int sumarPasivosCorrientes() {
 
 		int pasivo = 0;
 
 		for (int i = 0; i < pasivos.size(); i++) {
 
-			if (pasivos.get(i).isContraCuenta()) {
-				pasivo -= pasivos.get(i).getValor();
-			}else {
-				pasivo += pasivos.get(i).getValor();
+			if (pasivos.get(i).getClasificacion().equalsIgnoreCase("Corriente")) {
+				if (pasivos.get(i).isContraCuenta()) {
+					pasivo -= pasivos.get(i).getValor();
+				}else {
+					pasivo += pasivos.get(i).getValor();
+				}
 			}
+
+
 
 		}
 
 		return pasivo;
+
+	}
+	
+	public int sumarPasivosNoCorrientes() {
+
+		int pasivo = 0;
+
+		for (int i = 0; i < pasivos.size(); i++) {
+
+			if (pasivos.get(i).getClasificacion().equalsIgnoreCase("No Corriente")) {
+				if (pasivos.get(i).isContraCuenta()) {
+					pasivo -= pasivos.get(i).getValor();
+				}else {
+					pasivo += pasivos.get(i).getValor();
+				}
+			}
+
+
+
+		}
+
+		return pasivo;
+
+	}
+	
+	public int totalPasivos() {
+
+		return sumarPasivosCorrientes() + sumarPasivosNoCorrientes();
 
 	}
 
@@ -148,6 +218,33 @@ public class BalanceGeneral {
 
 	public ArrayList<Cuenta> getPatrimonio() {
 		return patrimonio;
+	}
+	
+	public void escribirInfo() throws IOException {
+		
+		FileWriter fileWriter = new FileWriter("Data/" + compania + ".txt", false);
+		BufferedWriter bw = new BufferedWriter(fileWriter);
+		PrintWriter out = new PrintWriter(bw);
+		
+		for (int i = 0; i < activos.size(); i++) {
+			out.print(activos.get(i).getNombre() + "," + activos.get(i).getValor() + "\t");
+		}
+		
+		out.println();
+		
+		for (int i = 0; i < pasivos.size(); i++) {
+			out.print(pasivos.get(i).getNombre() + "," + pasivos.get(i).getValor() + "\t");
+		}
+		
+		out.println();
+		
+		for (int i = 0; i < patrimonio.size(); i++) {
+			out.print(patrimonio.get(i).getNombre() + "," + patrimonio.get(i).getValor() + "\t");
+		}
+		
+		out.println();
+		
+		out.close();
 	}
 
 }

@@ -73,7 +73,7 @@
                         </TextField>
                         <CheckBox fx:id="contraCuentaCheckBox" layoutX="47.0" layoutY="383.0" mnemonicParsing="false" text="Contra cuenta" />
                         <Button layoutX="47.0" layoutY="426.0" mnemonicParsing="false" onAction="#registrarCuentaButton" text="Registrar" />
-                        <Label fx:id="infoLabel" layoutX="369.0" layoutY="93.0" prefHeight="36.0" prefWidth="279.0" />
+                        <Label fx:id="infoLabelRegistro" layoutX="369.0" layoutY="93.0" prefHeight="36.0" prefWidth="279.0" />
                         <ComboBox fx:id="tipoCuentaComboBox" layoutX="47.0" layoutY="203.0" prefWidth="150.0" promptText="Tipo de cuenta" />
                         <ComboBox fx:id="clasificacionComboBox" layoutX="47.0" layoutY="243.0" prefWidth="150.0" promptText="Clasificacion" />
                      </children>
