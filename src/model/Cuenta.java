@@ -24,24 +24,16 @@ public class Cuenta {
 		return nombre;
 	}
 
-	public void setNombre(String nombre) {
-		this.nombre = nombre;
-	}
-
 	public String getTipo() {
 		return tipo;
-	}
-
-	public void setTipo(String tipo) {
-		this.tipo = tipo;
 	}
 
 	public int getValor() {
 		return valor;
 	}
 
-	public void setValor(int valor) {
-		this.valor = valor;
+	public void aumentarValor(int valor2) {
+		this.valor += valor2;
 	}
 
 	public boolean isContraCuenta() {

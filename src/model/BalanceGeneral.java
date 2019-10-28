@@ -258,68 +258,75 @@ public class BalanceGeneral {
 		BufferedReader br = new BufferedReader(fr);
 
 		String line = br.readLine();
-		String[] parts = line.split(",");
-		StringTokenizer st;
+		
+		if (line != null) {
+			
+			String[] parts = line.split(",");
+			StringTokenizer st;
 
-		for (int i = 0; i < parts.length; i++) {
+			for (int i = 0; i < parts.length; i++) {
 
-			st = new StringTokenizer(parts[i]);
+				st = new StringTokenizer(parts[i]);
 
-			String nombreCuenta = st.nextToken();
-			int valorCuenta = Integer.valueOf(st.nextToken());
-			String clasificacionCuenta = st.nextToken();
-			boolean contra = false;
-			if (valorCuenta < 0) {
-				contra = true;
+				String nombreCuenta = st.nextToken();
+				int valorCuenta = Integer.valueOf(st.nextToken());
+				String clasificacionCuenta = st.nextToken();
+				boolean contra = false;
+				if (valorCuenta < 0) {
+					contra = true;
+				}
+
+				Cuenta nuevaCuenta = new Cuenta(nombreCuenta, "Activo", valorCuenta, clasificacionCuenta, contra);
+
+				activos.add(nuevaCuenta);
+
 			}
 
-			Cuenta nuevaCuenta = new Cuenta(nombreCuenta, "Activo", valorCuenta, clasificacionCuenta, contra);
+			line = br.readLine();
+			parts = line.split(",");
 
-			activos.add(nuevaCuenta);
+			for (int i = 0; i < parts.length; i++) {
 
-		}
+				st = new StringTokenizer(parts[i]);
 
-		line = br.readLine();
-		parts = line.split(",");
+				String nombreCuenta = st.nextToken();
+				int valorCuenta = Integer.valueOf(st.nextToken());
+				String clasificacionCuenta = st.nextToken();
+				boolean contra = false;
+				if (valorCuenta < 0) {
+					contra = true;
+				}
 
-		for (int i = 0; i < parts.length; i++) {
+				Cuenta nuevaCuenta = new Cuenta(nombreCuenta, "Activo", valorCuenta, clasificacionCuenta, contra);
 
-			st = new StringTokenizer(parts[i]);
+				pasivos.add(nuevaCuenta);
 
-			String nombreCuenta = st.nextToken();
-			int valorCuenta = Integer.valueOf(st.nextToken());
-			String clasificacionCuenta = st.nextToken();
-			boolean contra = false;
-			if (valorCuenta < 0) {
-				contra = true;
 			}
+			
+			line = br.readLine();
+			parts = line.split(",");
 
-			Cuenta nuevaCuenta = new Cuenta(nombreCuenta, "Activo", valorCuenta, clasificacionCuenta, contra);
+			for (int i = 0; i < parts.length; i++) {
 
-			pasivos.add(nuevaCuenta);
+				st = new StringTokenizer(parts[i]);
 
+				String nombreCuenta = st.nextToken();
+				int valorCuenta = Integer.valueOf(st.nextToken());
+				String clasificacionCuenta = st.nextToken();
+				boolean contra = false;
+				if (valorCuenta < 0) {
+					contra = true;
+				}
+
+				Cuenta nuevaCuenta = new Cuenta(nombreCuenta, "Activo", valorCuenta, clasificacionCuenta, contra);
+
+				patrimonio.add(nuevaCuenta);
+
+			}
+			
 		}
 		
-		line = br.readLine();
-		parts = line.split(",");
-
-		for (int i = 0; i < parts.length; i++) {
-
-			st = new StringTokenizer(parts[i]);
-
-			String nombreCuenta = st.nextToken();
-			int valorCuenta = Integer.valueOf(st.nextToken());
-			String clasificacionCuenta = st.nextToken();
-			boolean contra = false;
-			if (valorCuenta < 0) {
-				contra = true;
-			}
-
-			Cuenta nuevaCuenta = new Cuenta(nombreCuenta, "Activo", valorCuenta, clasificacionCuenta, contra);
-
-			patrimonio.add(nuevaCuenta);
-
-		}
+		
 
 	}
 

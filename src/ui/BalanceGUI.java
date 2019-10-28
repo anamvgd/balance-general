@@ -102,6 +102,7 @@ public class BalanceGUI {
 			String nombre = nombreCuentaTextField.getText();
 			String tipo = tipoCuentaComboBox.getValue();
 			String clasificacion;
+
 			if (tipo.equalsIgnoreCase("Patrimonio")) {
 				clasificacion = "No aplica";
 			}else {
@@ -110,41 +111,88 @@ public class BalanceGUI {
 
 			int valor = Integer.valueOf(valorCuentaTextField.getText());
 			boolean contra = contraCuentaCheckBox.isSelected();
-			
+
 			if (contra) {
 				valor = Math.negateExact(valor);
 			}
-			
 
-			Cuenta nuevaCuenta = new Cuenta(nombre, tipo, valor, clasificacion, contra);
 
-			switch (tipo) {
+			if (!bg.cuentaExistente(nombre, tipo)) {
 
-			case "Activo":
+				Cuenta nuevaCuenta = new Cuenta(nombre, tipo, valor, clasificacion, contra);
+
+				switch (tipo) {
+
+				case "Activo":
+
+					bg.getActivos().add(nuevaCuenta);
+					bg.escribirInfo();
+
+					break;
+
+				case "Pasivo":
+
+					bg.getPasivos().add(nuevaCuenta);
+					bg.escribirInfo();
+
+					break;
+
+				default:
+
+					bg.getPatrimonio().add(nuevaCuenta);
+					bg.escribirInfo();
+
+					break;
+				}
+
+			}else {
+				infoLabelRegistro.setText("Cuenta existente");
 				
-				bg.getActivos().add(nuevaCuenta);
-				bg.escribirInfo();
-				
-				break;
+				boolean added = false;
 
-			case "Pasivo":
+				if (tipo.equalsIgnoreCase("Activo")) {
 
-				bg.getPasivos().add(nuevaCuenta);
-				bg.escribirInfo();
+					for (int i = 0; i < bg.getActivos().size() && !added; i++) {
+						if (bg.getActivos().get(i).getNombre().equalsIgnoreCase(nombre)) {
+							bg.getActivos().get(i).aumentarValor(valor);
+							added = true;
+						}
+					
+					}
+					
+					
+					bg.escribirInfo();
 
-				break;
+				}else if (tipo.equalsIgnoreCase("Pasivo")) {
 
-			default:
+					for (int i = 0; i < bg.getPasivos().size() && !added; i++) {
+						if (bg.getPasivos().get(i).getNombre().equalsIgnoreCase(nombre)) {
+							bg.getPasivos().get(i).aumentarValor(valor);
+							added = true;
+						}
+					}
+					
+					bg.escribirInfo();
 
-				bg.getPatrimonio().add(nuevaCuenta);
-				bg.escribirInfo();
-				
-				break;
+				}else {
+
+					for (int i = 0; i < bg.getPatrimonio().size() && !added; i++) {
+						if (bg.getPatrimonio().get(i).getNombre().equalsIgnoreCase(nombre)) {
+							bg.getPatrimonio().get(i).aumentarValor(valor);
+							added = true;
+						}
+					}
+					
+					bg.escribirInfo();
+
+				}
+
 			}
 
 		}else {
 			infoLabelRegistro.setText("Primero debe seleccionar una empresa");
 		}
+
 
 	}
 
@@ -191,7 +239,7 @@ public class BalanceGUI {
 			DateFormat formato = new SimpleDateFormat("dd/MMMM/YYYY");
 			String fecha = formato.format(bg.getFecha());
 			fechaLabel.setText(fecha);
-			
+
 			bg.leerInfo();
 		}
 
