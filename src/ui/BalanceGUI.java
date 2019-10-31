@@ -130,9 +130,10 @@ public class BalanceGUI {
 
 	@FXML
 	void registrarCuentaButton(ActionEvent event) throws IOException {
+		
+		infoLabelRegistro.setText(" ");
 
-
-		if (bg != null) {
+		if (bg != null && nombreCuentaTextField.getText() != null && tipoCuentaComboBox.getValue() != null && clasificacionComboBox.getValue() != null && valorCuentaTextField.getText() != null) {
 
 			String nombre = nombreCuentaTextField.getText();
 			String tipo = tipoCuentaComboBox.getValue();
@@ -258,39 +259,46 @@ public class BalanceGUI {
 			}
 
 		}else {
-			infoLabelRegistro.setText("Primero debe seleccionar una empresa");
+			infoLabelRegistro.setText("Primero debe seleccionar una empresa \nY llenar toda la informacion");
 		}
-
+		
+		nombreCuentaTextField.setText(" ");
+		valorCuentaTextField.setText(" ");
 
 	}
 
 	@FXML
 	void agregarCompaniaButton(ActionEvent event) throws IOException {
-
-		String nuevaCompania = nuevaCompaniaTextField.getText();
-
-		String ruta = "Data/" + nuevaCompania + ".txt";
-		File nuevoArchivo = new File(ruta);
-
-		if (!nuevoArchivo.exists()) {
-			nuevoArchivo.createNewFile();
-
-			FileWriter fw = new FileWriter(PATH_EMPRESAS, true);
-			BufferedWriter bw = new BufferedWriter(fw);
-			PrintWriter out = new PrintWriter(bw);
-			out.println();
-			out.print(nuevaCompania);
-
-			out.close();
-
-			initialize();
-
-			nuevaCompaniaTextField.setText("");
+		
+		if (nuevaCompaniaTextField.getText().equalsIgnoreCase("")) {
+			infoLabelInicio.setText("Ingrese una empresa");
 		}else {
-			infoLabelInicio.setText("Empresa existente");
+			
+			String nuevaCompania = nuevaCompaniaTextField.getText();
+
+			String ruta = "Data/" + nuevaCompania + ".txt";
+			File nuevoArchivo = new File(ruta);
+
+			if (!nuevoArchivo.exists()) {
+				nuevoArchivo.createNewFile();
+
+				FileWriter fw = new FileWriter(PATH_EMPRESAS, true);
+				BufferedWriter bw = new BufferedWriter(fw);
+				PrintWriter out = new PrintWriter(bw);
+				out.println();
+				out.print(nuevaCompania);
+
+				out.close();
+
+				initialize();
+
+				nuevaCompaniaTextField.setText("");
+			}else {
+				infoLabelInicio.setText("Empresa existente");
+			}
+			
 		}
-
-
+	
 
 	}
 
@@ -651,36 +659,40 @@ public class BalanceGUI {
 	@FXML
     void update1(ActionEvent event) {
 		
-		String act = String.valueOf(bg.totalActivos());
-		String pas = String.valueOf(bg.totalPasivos()+bg.sumarPatrimonio());
+		if (bg != null) {
+			
+			String act = String.valueOf(bg.totalActivos());
+			String pas = String.valueOf(bg.totalPasivos()+bg.sumarPatrimonio());
+			
+			generarBalanceActivos();
+			generarBalancePasivos();
+			generarBalancePatrimonio();
+			
+			totalActivosLabel.setText(act);
+			totalPasivosPatrimonioLabel.setText(pas);
+			
+		}
 		
-		generarBalanceActivos();
-		generarBalancePasivos();
-		generarBalancePatrimonio();
-		
-		totalActivosLabel.setText(act);
-		totalPasivosPatrimonioLabel.setText(pas);
 		
     }
 
     @FXML
     void update2(ActionEvent event) {
     	
-    	String ing = String.valueOf(bg.totalIngresos());
-		String gas = String.valueOf(bg.totalGastos());
-		String util = String.valueOf(bg.totalIngresos() - bg.totalGastos());
-		
-		generarEstadoIngresos();
-		generarEstadoGastos();
-		
-		totalIngresosLabel.setText(ing);
-		totalGastosLabel.setText(gas);
-		
-		utilidadLabel.setText(util);
-    	
+    	if (bg != null) {
+    		String ing = String.valueOf(bg.totalIngresos());
+    		String gas = String.valueOf(bg.totalGastos());
+    		String util = String.valueOf(bg.totalIngresos() - bg.totalGastos());
+    		
+    		generarEstadoIngresos();
+    		generarEstadoGastos();
+    		
+    		totalIngresosLabel.setText(ing);
+    		totalGastosLabel.setText(gas);
+    		
+    		utilidadLabel.setText(util);
+		}    	
     }
-
-
 
 }
 
