@@ -1,0 +1,5 @@
+AC 1000 Corriente,ANC 2500 No_corriente,w -4000 Corriente,
+PC 1200 Corriente,PNC 800 No_corriente,
+P 10000 No_Aplica,
+IO 2000 Operativo,INO 100 No_Operativo,
+INO 2700 Operativo,GNO 600 No_Operativo,

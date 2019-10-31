@@ -18,6 +18,8 @@ public class BalanceGeneral {
 	private ArrayList<Cuenta> activos;
 	private ArrayList<Cuenta> pasivos;
 	private ArrayList<Cuenta> patrimonio;
+	private ArrayList<Cuenta> ingresos;
+	private ArrayList<Cuenta> gastos;
 
 	public BalanceGeneral(String compania) {
 
@@ -26,6 +28,8 @@ public class BalanceGeneral {
 		this.activos = new ArrayList<Cuenta>();
 		this.pasivos = new ArrayList<Cuenta>();
 		this.patrimonio = new ArrayList<Cuenta>();
+		this.ingresos = new ArrayList<Cuenta>();
+		this.gastos = new ArrayList<Cuenta>();
 
 	}
 
@@ -36,12 +40,10 @@ public class BalanceGeneral {
 		for (int i = 0; i < activos.size(); i++) {
 
 			if (activos.get(i).getClasificacion().equalsIgnoreCase("Corriente")) {
-				
-					activo += activos.get(i).getValor();
-				
+
+				activo += activos.get(i).getValor();
 
 			}
-
 
 		}
 
@@ -57,9 +59,7 @@ public class BalanceGeneral {
 
 			if (activos.get(i).getClasificacion().equalsIgnoreCase("No_Corriente")) {
 
-				
-					activo += activos.get(i).getValor();
-				
+				activo += activos.get(i).getValor();			
 
 			}
 
@@ -144,6 +144,88 @@ public class BalanceGeneral {
 
 	}
 
+	public int sumarIngresosOperativos() {
+
+		int ingreso = 0;
+
+		for (int i = 0; i < ingresos.size(); i++) {
+
+			if (ingresos.get(i).getClasificacion().equalsIgnoreCase("Operativo")) {
+
+				ingreso += ingresos.get(i).getValor();
+
+			}
+
+		}
+
+		return ingreso;
+
+	}
+
+	public int sumarIngresosNoOperativos() {
+
+		int ingreso = 0;
+
+		for (int i = 0; i < ingresos.size(); i++) {
+
+			if (ingresos.get(i).getClasificacion().equalsIgnoreCase("No_Operativo")) {
+
+				ingreso += ingresos.get(i).getValor();
+
+			}
+
+		}
+
+		return ingreso;
+
+	}
+
+	public int totalIngresos() {
+		return sumarIngresosOperativos() + sumarIngresosNoOperativos();
+	}
+
+	public int sumarGastosOperativos() {
+
+		int gasto = 0;
+
+		for (int i = 0; i < gastos.size(); i++) {
+
+			if (gastos.get(i).getClasificacion().equalsIgnoreCase("Operativo")) {
+
+				gasto += gastos.get(i).getValor();
+
+			}
+
+		}
+
+		return gasto;
+
+	}
+
+	public int sumarGastosNoOperativos() {
+
+		int gasto = 0;
+
+		for (int i = 0; i < gastos.size(); i++) {
+
+			if (gastos.get(i).getClasificacion().equalsIgnoreCase("No_Operativo")) {
+
+				gasto += gastos.get(i).getValor();
+
+			}
+
+		}
+
+		return gasto;
+
+	}
+
+	public int totalGastos() {
+
+		return sumarGastosOperativos() + sumarGastosNoOperativos();
+
+	}
+
 	public boolean cuentaExistente(String nombre, String tipo) {
 
 		boolean existe = false;
@@ -174,6 +256,30 @@ public class BalanceGeneral {
 
 			break;
 
+		case "Ingreso":
+
+			for (int i = 0; i < ingresos.size() && !existe; i++) {
+
+				if (ingresos.get(i).getNombre().equalsIgnoreCase(nombre)) {
+					existe = true;
+				}
+
+			}
+
+			break;
+
+		case "Gasto":
+
+			for (int i = 0; i < gastos.size() && !existe; i++) {
+
+				if (gastos.get(i).getNombre().equalsIgnoreCase(nombre)) {
+					existe = true;
+				}
+
+			}
+
+			break;
+
 		default:
 
 			for (int i = 0; i < patrimonio.size() && !existe; i++) {
@@ -195,16 +301,8 @@ public class BalanceGeneral {
 		return compania;
 	}
 
-	public void setCompania(String compania) {
-		this.compania = compania;
-	}
-
 	public Date getFecha() {
 		return fecha;
-	}
-
-	public void setFecha(Date fecha) {
-		this.fecha = fecha;
 	}
 
 	public ArrayList<Cuenta> getActivos() {
@@ -217,6 +315,14 @@ public class BalanceGeneral {
 
 	public ArrayList<Cuenta> getPatrimonio() {
 		return patrimonio;
+	}
+
+	public ArrayList<Cuenta> getIngresos(){
+		return ingresos;
+	}
+
+	public ArrayList<Cuenta> getGastos(){
+		return gastos;
 	}
 
 	public void escribirInfo() throws IOException {
@@ -239,6 +345,18 @@ public class BalanceGeneral {
 
 		for (int i = 0; i < patrimonio.size(); i++) {
 			out.print(patrimonio.get(i).getNombre() + " " + patrimonio.get(i).getValor() + " " + "No_Aplica" + ",");
+		}
+
+		out.println();
+		
+		for (int i = 0; i < ingresos.size(); i++) {
+			out.print(ingresos.get(i).getNombre() + " " + ingresos.get(i).getValor() + " " + ingresos.get(i).getClasificacion() + ",");
+		}
+
+		out.println();
+		
+		for (int i = 0; i < gastos.size(); i++) {
+			out.print(gastos.get(i).getNombre() + " " + gastos.get(i).getValor() + " " + gastos.get(i).getClasificacion() + ",");
 		}
 
 		out.println();
@@ -279,13 +397,13 @@ public class BalanceGeneral {
 		}
 
 		line = br.readLine();
-		
+
 
 		if (line != null) {
-			
+
 			String[] parts = line.split(",");
 			StringTokenizer st;
-			
+
 			for (int i = 0; i < parts.length; i++) {
 
 				st = new StringTokenizer(parts[i]);
@@ -298,7 +416,7 @@ public class BalanceGeneral {
 					contra = true;
 				}
 
-				Cuenta nuevaCuenta = new Cuenta(nombreCuenta, "Activo", valorCuenta, clasificacionCuenta, contra);
+				Cuenta nuevaCuenta = new Cuenta(nombreCuenta, "Pasivo", valorCuenta, clasificacionCuenta, contra);
 
 				pasivos.add(nuevaCuenta);
 
@@ -313,7 +431,7 @@ public class BalanceGeneral {
 
 			String[] parts = line.split(",");
 			StringTokenizer st;
-			
+
 			for (int i = 0; i < parts.length; i++) {
 
 				st = new StringTokenizer(parts[i]);
@@ -326,9 +444,63 @@ public class BalanceGeneral {
 					contra = true;
 				}
 
-				Cuenta nuevaCuenta = new Cuenta(nombreCuenta, "Activo", valorCuenta, clasificacionCuenta, contra);
+				Cuenta nuevaCuenta = new Cuenta(nombreCuenta, "Patrimonio", valorCuenta, clasificacionCuenta, contra);
 
 				patrimonio.add(nuevaCuenta);
+
+			}
+
+		}
+		
+		line = br.readLine();
+
+		if (line != null) {
+
+			String[] parts = line.split(",");
+			StringTokenizer st;
+
+			for (int i = 0; i < parts.length; i++) {
+
+				st = new StringTokenizer(parts[i]);
+
+				String nombreCuenta = st.nextToken();
+				int valorCuenta = Integer.valueOf(st.nextToken());
+				String clasificacionCuenta = st.nextToken();
+				boolean contra = false;
+				if (valorCuenta < 0) {
+					contra = true;
+				}
+
+				Cuenta nuevaCuenta = new Cuenta(nombreCuenta, "Ingreso", valorCuenta, clasificacionCuenta, contra);
+
+				ingresos.add(nuevaCuenta);
+
+			}
+
+		}
+		
+		line = br.readLine();
+
+		if (line != null) {
+
+			String[] parts = line.split(",");
+			StringTokenizer st;
+
+			for (int i = 0; i < parts.length; i++) {
+
+				st = new StringTokenizer(parts[i]);
+
+				String nombreCuenta = st.nextToken();
+				int valorCuenta = Integer.valueOf(st.nextToken());
+				String clasificacionCuenta = st.nextToken();
+				boolean contra = false;
+				if (valorCuenta < 0) {
+					contra = true;
+				}
+
+				Cuenta nuevaCuenta = new Cuenta(nombreCuenta, "Gasto", valorCuenta, clasificacionCuenta, contra);
+
+				gastos.add(nuevaCuenta);
 
 			}
 

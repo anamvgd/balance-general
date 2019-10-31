@@ -7,26 +7,17 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.io.RandomAccessFile;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.EventListener;
-import java.util.logging.SimpleFormatter;
-
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
-import javafx.scene.control.MenuButton;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import model.BalanceGeneral;
 import model.Cuenta;
@@ -82,6 +73,27 @@ public class BalanceGUI {
 
 	@FXML
 	private ScrollPane patrimonioPane;
+	
+	@FXML
+    private Label nombreEmpresaLabel1;
+
+    @FXML
+    private Label fechaLabel1;
+
+    @FXML
+    private ScrollPane ingresosPane;
+
+    @FXML
+    private ScrollPane gastosPane;
+
+    @FXML
+    private Label totalIngresosLabel;
+
+    @FXML
+    private Label totalGastosLabel;
+    
+    @FXML
+    private Label utilidadLabel;
 
 	private BalanceGeneral bg;
 
@@ -106,8 +118,8 @@ public class BalanceGUI {
 		br.close();
 		fr.close();
 
-		ObservableList<String> list2 = FXCollections.observableArrayList("Activo", "Pasivo", "Patrimonio");
-		ObservableList<String> list3 = FXCollections.observableArrayList("Corriente", "No_corriente", "No_aplica");
+		ObservableList<String> list2 = FXCollections.observableArrayList("Activo", "Pasivo", "Patrimonio", "Ingreso", "Gasto");
+		ObservableList<String> list3 = FXCollections.observableArrayList("Corriente", "No_corriente", "No_aplica", "Operativo", "No_Operativo");
 
 		tipoCuentaComboBox.setItems(list2);
 		clasificacionComboBox.setItems(list3);
@@ -159,6 +171,18 @@ public class BalanceGUI {
 					bg.escribirInfo();
 
 					break;
+					
+				case "Ingreso":
+					
+					bg.getIngresos().add(nuevaCuenta);
+					
+					break;
+					
+				case "Gasto":
+					
+					bg.getGastos().add(nuevaCuenta);
+					
+					break;
 
 				default:
 
@@ -196,7 +220,7 @@ public class BalanceGUI {
 
 					bg.escribirInfo();
 
-				}else {
+				}else if(tipo.equalsIgnoreCase("Patrimonio")){
 
 					for (int i = 0; i < bg.getPatrimonio().size() && !added; i++) {
 						if (bg.getPatrimonio().get(i).getNombre().equalsIgnoreCase(nombre)) {
@@ -207,6 +231,28 @@ public class BalanceGUI {
 
 					bg.escribirInfo();
 
+				}else if (tipo.equalsIgnoreCase("Ingreso")) {
+					
+					for (int i = 0; i < bg.getIngresos().size() && !added; i++) {
+						if (bg.getIngresos().get(i).getNombre().equalsIgnoreCase(nombre)) {
+							bg.getIngresos().get(i).aumentarValor(valor);
+							added = true;
+						}
+					}
+
+					bg.escribirInfo();
+					
+				}else {
+					
+					for (int i = 0; i < bg.getGastos().size() && !added; i++) {
+						if (bg.getGastos().get(i).getNombre().equalsIgnoreCase(nombre)) {
+							bg.getGastos().get(i).aumentarValor(valor);
+							added = true;
+						}
+					}
+
+					bg.escribirInfo();
+					
 				}
 
 			}
@@ -257,23 +303,17 @@ public class BalanceGUI {
 			bg = new BalanceGeneral(listaEmpresasComboBox.getValue());
 
 			nombreEmpresaLabel.setText(bg.getCompania());
+			nombreEmpresaLabel1.setText(bg.getCompania());
 
 			DateFormat formato = new SimpleDateFormat("dd/MMMM/YYYY");
+			DateFormat formato2 = new SimpleDateFormat("MMMM/YYYY");
 			String fecha = formato.format(bg.getFecha());
+			String fecha2 = formato2.format(bg.getFecha());
 			fechaLabel.setText(fecha);
+			fechaLabel1.setText(fecha2);
 
 			bg.leerInfo();
 
-			String act = String.valueOf(bg.totalActivos());
-			System.out.println();
-			String pas = String.valueOf(bg.totalPasivos()+bg.sumarPatrimonio());
-
-			generarBalanceActivos();
-			generarBalancePasivos();
-			generarBalancePatrimonio();
-
-			totalActivosLabel.setText(act);
-			totalPasivosPatrimonioLabel.setText(pas);
 		}
 
 
@@ -429,6 +469,7 @@ public class BalanceGUI {
 
 	}
 
+	
 	public void generarBalancePatrimonio() {
 
 		GridPane gp3 = new GridPane();
@@ -443,8 +484,8 @@ public class BalanceGUI {
 			Label label1 = new Label();
 			Label label2 = new Label();
 
-			label1.setText(bg.getActivos().get(j).getNombre());
-			String val = String.valueOf(bg.getActivos().get(j).getValor());
+			label1.setText(bg.getPatrimonio().get(j).getNombre());
+			String val = String.valueOf(bg.getPatrimonio().get(j).getValor());
 			label2.setText(val);
 
 			gp3.add(label1, 0, j);
@@ -458,6 +499,187 @@ public class BalanceGUI {
 
 
 	}
+	
+	public void generarEstadoIngresos() {
+		
+		GridPane gp4 = new GridPane();	
+		ingresosPane.setContent(gp4);;
+
+		int i = 0;
+		Label l1 = new Label();
+		l1.setText("INGRESOS OPERATIVOS");
+		gp4.add(l1, 0, i);
+
+
+
+		for (int j = 0; j < bg.getIngresos().size(); j++) {
+
+
+			if (bg.getIngresos().get(j).getClasificacion().equalsIgnoreCase("Operativo")) {
+
+				Label label = new Label();
+				label.setText("\t\t");
+				Label label1 = new Label();
+				Label label2 = new Label();
+
+				label1.setText(bg.getIngresos().get(j).getNombre());
+				String val = String.valueOf(bg.getIngresos().get(j).getValor());
+				label2.setText(val);
+
+				gp4.add(label1, 0, i+1);
+				gp4.add(label, 1, i+1);
+				gp4.add(label2, 2, i+1);
+
+				i++;
+
+			}
+
+		}
+
+		gp4.add(new Label(String.valueOf(bg.sumarIngresosOperativos())), 2, i+1);
+
+		i+=2;
+		l1 = new Label();
+		l1.setText("INGRESOS NO OPERATIVOS");
+		gp4.add(l1, 0, i);
+		i++;
+
+
+		for (int j = 0; j < bg.getIngresos().size(); j++) {
+
+
+			if (bg.getIngresos().get(j).getClasificacion().equalsIgnoreCase("No_Operativo")) {
+
+				Label label = new Label();
+				label.setText("\t\t\t\t\t\t");
+				Label label1 = new Label();
+				Label label2 = new Label();
+
+				label1.setText(bg.getIngresos().get(j).getNombre());
+				String val = String.valueOf(bg.getIngresos().get(j).getValor());
+				label2.setText(val);
+
+				gp4.add(label1, 0, i+1);
+				gp4.add(label, 1, i+1);
+				gp4.add(label2, 2, i+1);
+
+				i++;
+
+			}
+
+		}
+
+		gp4.add(new Label(String.valueOf(bg.sumarIngresosNoOperativos())), 2, i+1);
+
+		
+	}
+	
+	public void generarEstadoGastos() {
+		
+		GridPane gp4 = new GridPane();	
+		gastosPane.setContent(gp4);;
+
+		int i = 0;
+		Label l1 = new Label();
+		l1.setText("GASTOS OPERATIVOS");
+		gp4.add(l1, 0, i);
+
+
+
+		for (int j = 0; j < bg.getGastos().size(); j++) {
+
+
+			if (bg.getGastos().get(j).getClasificacion().equalsIgnoreCase("Operativo")) {
+
+				Label label = new Label();
+				label.setText("\t\t");
+				Label label1 = new Label();
+				Label label2 = new Label();
+
+				label1.setText(bg.getGastos().get(j).getNombre());
+				String val = String.valueOf(bg.getGastos().get(j).getValor());
+				label2.setText(val);
+
+				gp4.add(label1, 0, i+1);
+				gp4.add(label, 1, i+1);
+				gp4.add(label2, 2, i+1);
+
+				i++;
+
+			}
+
+		}
+
+		gp4.add(new Label(String.valueOf(bg.sumarGastosOperativos())), 2, i+1);
+
+		i+=2;
+		l1 = new Label();
+		l1.setText("GASTOS NO OPERATIVOS");
+		gp4.add(l1, 0, i);
+		i++;
+
+
+		for (int j = 0; j < bg.getGastos().size(); j++) {
+
+
+			if (bg.getGastos().get(j).getClasificacion().equalsIgnoreCase("No_Operativo")) {
+
+				Label label = new Label();
+				label.setText("\t\t\t\t\t\t");
+				Label label1 = new Label();
+				Label label2 = new Label();
+
+				label1.setText(bg.getGastos().get(j).getNombre());
+				String val = String.valueOf(bg.getGastos().get(j).getValor());
+				label2.setText(val);
+
+				gp4.add(label1, 0, i+1);
+				gp4.add(label, 1, i+1);
+				gp4.add(label2, 2, i+1);
+
+				i++;
+
+			}
+
+		}
+
+		gp4.add(new Label(String.valueOf(bg.sumarGastosNoOperativos())), 2, i+1);
+
+		
+	}
+	
+	@FXML
+    void update1(ActionEvent event) {
+		
+		String act = String.valueOf(bg.totalActivos());
+		String pas = String.valueOf(bg.totalPasivos()+bg.sumarPatrimonio());
+		
+		generarBalanceActivos();
+		generarBalancePasivos();
+		generarBalancePatrimonio();
+		
+		totalActivosLabel.setText(act);
+		totalPasivosPatrimonioLabel.setText(pas);
+		
+    }
+
+    @FXML
+    void update2(ActionEvent event) {
+    	
+    	String ing = String.valueOf(bg.totalIngresos());
+		String gas = String.valueOf(bg.totalGastos());
+		String util = String.valueOf(bg.totalIngresos() - bg.totalGastos());
+		
+		generarEstadoIngresos();
+		generarEstadoGastos();
+		
+		totalIngresosLabel.setText(ing);
+		totalGastosLabel.setText(gas);
+		
+		utilidadLabel.setText(util);
+    	
+    }
+
 
 
 }
