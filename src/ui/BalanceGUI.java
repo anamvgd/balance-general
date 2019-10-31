@@ -17,11 +17,14 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
 import model.BalanceGeneral;
 import model.Cuenta;
 
@@ -62,6 +65,21 @@ public class BalanceGUI {
 	@FXML
 	private Label infoLabelInicio;
 
+	@FXML
+	private Label totalActivosLabel;
+
+	@FXML
+	private Label totalPasivosPatrimonioLabel;
+
+	@FXML
+	private AnchorPane activosPane;
+
+	@FXML
+	private AnchorPane pasivosPane;
+
+	@FXML
+	private AnchorPane patrimonioPane;
+
 	private BalanceGeneral bg;
 
 	public void initialize() throws IOException {
@@ -90,6 +108,8 @@ public class BalanceGUI {
 
 		tipoCuentaComboBox.setItems(list2);
 		clasificacionComboBox.setItems(list3);
+
+
 
 	}
 
@@ -146,8 +166,7 @@ public class BalanceGUI {
 				}
 
 			}else {
-				infoLabelRegistro.setText("Cuenta existente");
-				
+
 				boolean added = false;
 
 				if (tipo.equalsIgnoreCase("Activo")) {
@@ -157,10 +176,10 @@ public class BalanceGUI {
 							bg.getActivos().get(i).aumentarValor(valor);
 							added = true;
 						}
-					
+
 					}
-					
-					
+
+
 					bg.escribirInfo();
 
 				}else if (tipo.equalsIgnoreCase("Pasivo")) {
@@ -171,7 +190,7 @@ public class BalanceGUI {
 							added = true;
 						}
 					}
-					
+
 					bg.escribirInfo();
 
 				}else {
@@ -182,7 +201,7 @@ public class BalanceGUI {
 							added = true;
 						}
 					}
-					
+
 					bg.escribirInfo();
 
 				}
@@ -241,9 +260,100 @@ public class BalanceGUI {
 			fechaLabel.setText(fecha);
 
 			bg.leerInfo();
+
+			String act = String.valueOf(bg.totalActivos());
+			System.out.println();
+			String pas = String.valueOf(bg.totalPasivos()+bg.sumarPatrimonio());
+
+			generarBalance();
+
+			totalActivosLabel.setText(act);
+			totalPasivosPatrimonioLabel.setText(pas);
 		}
 
 
+
+	}
+
+	public void generarBalance() {
+
+		activosPane.getChildren().clear();
+
+		GridPane gp1 = new GridPane();
+		GridPane gp2 = new GridPane();
+		GridPane gp3 = new GridPane();
+		
+	
+
+		activosPane.getChildren().add(gp1);
+		pasivosPane.getChildren().add(gp2);
+		patrimonioPane.getChildren().add(gp3);
+
+		int i = 0;
+		Label l1 = new Label();
+		l1.setText("ACTIVOS CORRIENTES");
+		gp1.add(l1, 0, i);
+
+
+
+		for (int j = 0; j < bg.getActivos().size(); j++) {
+
+
+			if (bg.getActivos().get(j).getClasificacion().equalsIgnoreCase("Corriente")) {
+
+				Label label = new Label();
+				label.setText("\t\t");
+				Label label1 = new Label();
+				Label label2 = new Label();
+
+				label1.setText(bg.getActivos().get(j).getNombre());
+				String val = String.valueOf(bg.getActivos().get(j).getValor());
+				label2.setText(val);
+
+				gp1.add(label1, 0, i+1);
+				gp1.add(label, 1, i+1);
+				gp1.add(label2, 2, i+1);
+
+				i++;
+
+			}
+
+		}
+		
+		gp1.add(new Label(String.valueOf(bg.sumarActivosCorrientes())), 2, i+1);
+		
+		i+=2;
+		l1 = new Label();
+		l1.setText("ACTIVOS NO CORRIENTES");
+		gp1.add(l1, 0, i);
+		i++;
+		
+		
+		for (int j = 0; j < bg.getActivos().size(); j++) {
+
+
+			if (bg.getActivos().get(j).getClasificacion().equalsIgnoreCase("No_corriente")) {
+
+				Label label = new Label();
+				label.setText("\t\t\t\t\t\t");
+				Label label1 = new Label();
+				Label label2 = new Label();
+
+				label1.setText(bg.getActivos().get(j).getNombre());
+				String val = String.valueOf(bg.getActivos().get(j).getValor());
+				label2.setText(val);
+
+				gp1.add(label1, 0, i+1);
+				gp1.add(label, 1, i+1);
+				gp1.add(label2, 2, i+1);
+
+				i++;
+
+			}
+
+		}
+		
+		gp1.add(new Label(String.valueOf(bg.sumarActivosNoCorrientes())), 2, i+1);
 
 	}
 

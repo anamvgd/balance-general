@@ -3,7 +3,6 @@ package model;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -37,12 +36,9 @@ public class BalanceGeneral {
 		for (int i = 0; i < activos.size(); i++) {
 
 			if (activos.get(i).getClasificacion().equalsIgnoreCase("Corriente")) {
-
-				if (activos.get(i).isContraCuenta()) {
-					activo -= activos.get(i).getValor();
-				}else {
+				
 					activo += activos.get(i).getValor();
-				}
+				
 
 			}
 
@@ -59,13 +55,11 @@ public class BalanceGeneral {
 
 		for (int i = 0; i < activos.size(); i++) {
 
-			if (activos.get(i).getClasificacion().equalsIgnoreCase("No Corriente")) {
+			if (activos.get(i).getClasificacion().equalsIgnoreCase("No_Corriente")) {
 
-				if (activos.get(i).isContraCuenta()) {
-					activo -= activos.get(i).getValor();
-				}else {
+				
 					activo += activos.get(i).getValor();
-				}
+				
 
 			}
 
@@ -258,15 +252,18 @@ public class BalanceGeneral {
 		BufferedReader br = new BufferedReader(fr);
 
 		String line = br.readLine();
-		
+		System.out.println(line);
+
 		if (line != null) {
-			
+
 			String[] parts = line.split(",");
 			StringTokenizer st;
 
 			for (int i = 0; i < parts.length; i++) {
 
 				st = new StringTokenizer(parts[i]);
+
+				System.out.println(st.countTokens() + "en activos");
 
 				String nombreCuenta = st.nextToken();
 				int valorCuenta = Integer.valueOf(st.nextToken());
@@ -282,12 +279,21 @@ public class BalanceGeneral {
 
 			}
 
-			line = br.readLine();
-			parts = line.split(",");
+		}
 
+		line = br.readLine();
+		System.out.println(line);
+		
+
+		if (line != null) {
+			
+			String[] parts = line.split(",");
+			StringTokenizer st;
+			
 			for (int i = 0; i < parts.length; i++) {
 
 				st = new StringTokenizer(parts[i]);
+				System.out.println(st.countTokens() + "En pasivos");
 
 				String nombreCuenta = st.nextToken();
 				int valorCuenta = Integer.valueOf(st.nextToken());
@@ -302,13 +308,22 @@ public class BalanceGeneral {
 				pasivos.add(nuevaCuenta);
 
 			}
-			
-			line = br.readLine();
-			parts = line.split(",");
+		}
 
+
+
+		line = br.readLine();
+		System.out.println(line);
+
+		if (line != null) {
+
+			String[] parts = line.split(",");
+			StringTokenizer st;
+			
 			for (int i = 0; i < parts.length; i++) {
 
 				st = new StringTokenizer(parts[i]);
+				System.out.println(st.countTokens() + "en patrimonio");
 
 				String nombreCuenta = st.nextToken();
 				int valorCuenta = Integer.valueOf(st.nextToken());
@@ -323,10 +338,11 @@ public class BalanceGeneral {
 				patrimonio.add(nuevaCuenta);
 
 			}
-			
+
 		}
-		
-		
+
+		br.close();
+		fr.close();
 
 	}
 
