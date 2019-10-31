@@ -18,10 +18,13 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuButton;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
@@ -72,13 +75,13 @@ public class BalanceGUI {
 	private Label totalPasivosPatrimonioLabel;
 
 	@FXML
-	private AnchorPane activosPane;
+	private ScrollPane activosPane;
 
 	@FXML
-	private AnchorPane pasivosPane;
+	private ScrollPane pasivosPane;
 
 	@FXML
-	private AnchorPane patrimonioPane;
+	private ScrollPane patrimonioPane;
 
 	private BalanceGeneral bg;
 
@@ -265,7 +268,9 @@ public class BalanceGUI {
 			System.out.println();
 			String pas = String.valueOf(bg.totalPasivos()+bg.sumarPatrimonio());
 
-			generarBalance();
+			generarBalanceActivos();
+			generarBalancePasivos();
+			generarBalancePatrimonio();
 
 			totalActivosLabel.setText(act);
 			totalPasivosPatrimonioLabel.setText(pas);
@@ -275,19 +280,10 @@ public class BalanceGUI {
 
 	}
 
-	public void generarBalance() {
+	public void generarBalanceActivos() {
 
-		activosPane.getChildren().clear();
-
-		GridPane gp1 = new GridPane();
-		GridPane gp2 = new GridPane();
-		GridPane gp3 = new GridPane();
-		
-	
-
-		activosPane.getChildren().add(gp1);
-		pasivosPane.getChildren().add(gp2);
-		patrimonioPane.getChildren().add(gp3);
+		GridPane gp1 = new GridPane();	
+		activosPane.setContent(gp1);;
 
 		int i = 0;
 		Label l1 = new Label();
@@ -319,16 +315,16 @@ public class BalanceGUI {
 			}
 
 		}
-		
+
 		gp1.add(new Label(String.valueOf(bg.sumarActivosCorrientes())), 2, i+1);
-		
+
 		i+=2;
 		l1 = new Label();
 		l1.setText("ACTIVOS NO CORRIENTES");
 		gp1.add(l1, 0, i);
 		i++;
-		
-		
+
+
 		for (int j = 0; j < bg.getActivos().size(); j++) {
 
 
@@ -352,8 +348,114 @@ public class BalanceGUI {
 			}
 
 		}
-		
+
 		gp1.add(new Label(String.valueOf(bg.sumarActivosNoCorrientes())), 2, i+1);
+
+	}
+
+	public void generarBalancePasivos() {
+
+		
+		GridPane gp2 = new GridPane();
+		pasivosPane.setContent(gp2);;
+		
+		int i = 0;
+		Label l1 = new Label();
+		l1.setText("PASIVOS CORRIENTES");
+		gp2.add(l1, 0, i);
+
+
+
+		for (int j = 0; j < bg.getPasivos().size(); j++) {
+
+
+			if (bg.getPasivos().get(j).getClasificacion().equalsIgnoreCase("Corriente")) {
+
+				Label label = new Label();
+				label.setText("\t\t");
+				Label label1 = new Label();
+				Label label2 = new Label();
+				
+				
+				
+				label1.setText(bg.getPasivos().get(j).getNombre());
+				String val = String.valueOf(bg.getPasivos().get(j).getValor());
+				label2.setText(val);
+
+				gp2.add(label1, 0, i+1);
+				gp2.add(label, 1, i+1);
+				gp2.add(label2, 2, i+1);
+
+				i++;
+
+			}
+
+		}
+
+		gp2.add(new Label(String.valueOf(bg.sumarPasivosCorrientes())), 2, i+1);
+
+		i+=2;
+		l1 = new Label();
+		l1.setText("PASIVOS NO CORRIENTES");
+		gp2.add(l1, 0, i);
+		i++;
+
+
+		for (int j = 0; j < bg.getPasivos().size(); j++) {
+
+
+			if (bg.getPasivos().get(j).getClasificacion().equalsIgnoreCase("No_corriente")) {
+
+				Label label = new Label();
+				label.setText("\t\t\t\t\t\t");
+				Label label1 = new Label();
+				Label label2 = new Label();
+
+				label1.setText(bg.getPasivos().get(j).getNombre());
+				String val = String.valueOf(bg.getPasivos().get(j).getValor());
+				label2.setText(val);
+
+				gp2.add(label1, 0, i+1);
+				gp2.add(label, 1, i+1);
+				gp2.add(label2, 2, i+1);
+
+				i++;
+
+			}
+
+		}
+
+		gp2.add(new Label(String.valueOf(bg.sumarPasivosNoCorrientes())), 2, i+1);
+
+	}
+
+	public void generarBalancePatrimonio() {
+
+		GridPane gp3 = new GridPane();
+		
+		patrimonioPane.setContent(gp3);
+		int i = 0;
+
+		for (int j = 0; j < bg.getPatrimonio().size(); j++) {
+
+			Label label = new Label();
+			label.setText("\t\t\t\t\t\t\t");
+			Label label1 = new Label();
+			Label label2 = new Label();
+
+			label1.setText(bg.getActivos().get(j).getNombre());
+			String val = String.valueOf(bg.getActivos().get(j).getValor());
+			label2.setText(val);
+
+			gp3.add(label1, 0, j);
+			gp3.add(label, 1, j);
+			gp3.add(label2, 2, j);
+
+			i = j;
+		}
+
+		gp3.add(new Label(String.valueOf(bg.sumarPatrimonio())), 2, i+1);
+
 
 	}
 

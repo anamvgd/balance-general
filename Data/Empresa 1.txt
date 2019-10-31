@@ -1,3 +1,0 @@
-efectivo 1000 Corriente,equipo 1200 Corriente,vehiculos 5000 Corriente,depreciacion -2200 Corriente,equipo2 3000 No_corriente,planta 6000 No_corriente,
-deudas 1000 Corriente,
-edificio 1000 No_Aplica,

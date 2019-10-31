@@ -104,7 +104,7 @@ public class BalanceGeneral {
 
 		for (int i = 0; i < pasivos.size(); i++) {
 
-			if (pasivos.get(i).getClasificacion().equalsIgnoreCase("No Corriente")) {
+			if (pasivos.get(i).getClasificacion().equalsIgnoreCase("No_Corriente")) {
 				if (pasivos.get(i).isContraCuenta()) {
 					pasivo -= pasivos.get(i).getValor();
 				}else {
@@ -252,7 +252,6 @@ public class BalanceGeneral {
 		BufferedReader br = new BufferedReader(fr);
 
 		String line = br.readLine();
-		System.out.println(line);
 
 		if (line != null) {
 
@@ -262,8 +261,6 @@ public class BalanceGeneral {
 			for (int i = 0; i < parts.length; i++) {
 
 				st = new StringTokenizer(parts[i]);
-
-				System.out.println(st.countTokens() + "en activos");
 
 				String nombreCuenta = st.nextToken();
 				int valorCuenta = Integer.valueOf(st.nextToken());
@@ -282,7 +279,6 @@ public class BalanceGeneral {
 		}
 
 		line = br.readLine();
-		System.out.println(line);
 		
 
 		if (line != null) {
@@ -293,7 +289,6 @@ public class BalanceGeneral {
 			for (int i = 0; i < parts.length; i++) {
 
 				st = new StringTokenizer(parts[i]);
-				System.out.println(st.countTokens() + "En pasivos");
 
 				String nombreCuenta = st.nextToken();
 				int valorCuenta = Integer.valueOf(st.nextToken());
@@ -313,7 +308,6 @@ public class BalanceGeneral {
 
 
 		line = br.readLine();
-		System.out.println(line);
 
 		if (line != null) {
 
@@ -323,7 +317,6 @@ public class BalanceGeneral {
 			for (int i = 0; i < parts.length; i++) {
 
 				st = new StringTokenizer(parts[i]);
-				System.out.println(st.countTokens() + "en patrimonio");
 
 				String nombreCuenta = st.nextToken();
 				int valorCuenta = Integer.valueOf(st.nextToken());
