@@ -39,9 +39,6 @@ public class BalanceGUI {
 	private ComboBox<String> tipoCuentaComboBox;
 
 	@FXML
-	private ComboBox<String> clasificacionComboBox;
-
-	@FXML
 	private TextField valorCuentaTextField;
 
 	@FXML
@@ -73,27 +70,27 @@ public class BalanceGUI {
 
 	@FXML
 	private ScrollPane patrimonioPane;
-	
+
 	@FXML
-    private Label nombreEmpresaLabel1;
+	private Label nombreEmpresaLabel1;
 
-    @FXML
-    private Label fechaLabel1;
+	@FXML
+	private Label fechaLabel1;
 
-    @FXML
-    private ScrollPane ingresosPane;
+	@FXML
+	private ScrollPane ingresosPane;
 
-    @FXML
-    private ScrollPane gastosPane;
+	@FXML
+	private ScrollPane gastosPane;
 
-    @FXML
-    private Label totalIngresosLabel;
+	@FXML
+	private Label totalIngresosLabel;
 
-    @FXML
-    private Label totalGastosLabel;
-    
-    @FXML
-    private Label utilidadLabel;
+	@FXML
+	private Label totalGastosLabel;
+
+	@FXML
+	private Label utilidadLabel;
 
 	private BalanceGeneral bg;
 
@@ -118,150 +115,146 @@ public class BalanceGUI {
 		br.close();
 		fr.close();
 
-		ObservableList<String> list2 = FXCollections.observableArrayList("Activo", "Pasivo", "Patrimonio", "Ingreso", "Gasto");
-		ObservableList<String> list3 = FXCollections.observableArrayList("Corriente", "No_corriente", "No_aplica", "Operativo", "No_Operativo");
+		ObservableList<String> list2 = FXCollections.observableArrayList("Activo Corriente", "Activo No Corriente", "Pasivo Corriente", "Pasivo No Corriente", "Patrimonio", "Ingreso Operativo", "Ingreso No Operativo", "Gasto Operativo", "Gasto No Operativo");
 
 		tipoCuentaComboBox.setItems(list2);
-		clasificacionComboBox.setItems(list3);
-
-
 
 	}
 
 	@FXML
 	void registrarCuentaButton(ActionEvent event) throws IOException {
-		
+
 		infoLabelRegistro.setText(" ");
 
-		if (bg != null && nombreCuentaTextField.getText() != null && tipoCuentaComboBox.getValue() != null && clasificacionComboBox.getValue() != null && valorCuentaTextField.getText() != null) {
+		try {
 
-			String nombre = nombreCuentaTextField.getText();
-			String tipo = tipoCuentaComboBox.getValue();
-			String clasificacion;
+			if (bg != null && !nombreCuentaTextField.getText().equalsIgnoreCase("") && tipoCuentaComboBox.getValue() != null && !valorCuentaTextField.getText().equalsIgnoreCase("")) {
 
-			if (tipo.equalsIgnoreCase("Patrimonio")) {
-				clasificacion = "No aplica";
-			}else {
-				clasificacion = clasificacionComboBox.getValue();
-			}
+				String nombre = nombreCuentaTextField.getText();
+				String tipo = tipoCuentaComboBox.getValue();
 
-			int valor = Integer.valueOf(valorCuentaTextField.getText());
-			boolean contra = contraCuentaCheckBox.isSelected();
+				int	valor = Integer.valueOf(valorCuentaTextField.getText());
+				
+				if (valor < 0) {
+					throw new NumberFormatException();
+				}
+				
+				boolean contra = contraCuentaCheckBox.isSelected();
 
-			if (contra) {
-				valor = Math.negateExact(valor);
-			}
-
-
-			if (!bg.cuentaExistente(nombre, tipo)) {
-
-				Cuenta nuevaCuenta = new Cuenta(nombre, tipo, valor, clasificacion, contra);
-
-				switch (tipo) {
-
-				case "Activo":
-
-					bg.getActivos().add(nuevaCuenta);
-					bg.escribirInfo();
-
-					break;
-
-				case "Pasivo":
-
-					bg.getPasivos().add(nuevaCuenta);
-					bg.escribirInfo();
-
-					break;
-					
-				case "Ingreso":
-					
-					bg.getIngresos().add(nuevaCuenta);
-					
-					break;
-					
-				case "Gasto":
-					
-					bg.getGastos().add(nuevaCuenta);
-					
-					break;
-
-				default:
-
-					bg.getPatrimonio().add(nuevaCuenta);
-					bg.escribirInfo();
-
-					break;
+				if (contra) {
+					valor = Math.negateExact(valor);
 				}
 
-			}else {
 
-				boolean added = false;
+				if (!bg.cuentaExistente(nombre, tipo)) {
 
-				if (tipo.equalsIgnoreCase("Activo")) {
+					Cuenta nuevaCuenta = new Cuenta(nombre, tipo, valor, contra);
 
-					for (int i = 0; i < bg.getActivos().size() && !added; i++) {
-						if (bg.getActivos().get(i).getNombre().equalsIgnoreCase(nombre)) {
-							bg.getActivos().get(i).aumentarValor(valor);
-							added = true;
-						}
+					if (tipo.equalsIgnoreCase("Activo Corriente") || tipo.equalsIgnoreCase("Activo No corriente")) {
+
+						bg.getActivos().add(nuevaCuenta);
+						bg.escribirInfo();
+
+					}else if (tipo.equalsIgnoreCase("Pasivo Corriente") || tipo.equalsIgnoreCase("Pasivo No corriente")) {
+
+						bg.getPasivos().add(nuevaCuenta);
+						bg.escribirInfo();
+
+					}else if (tipo.equalsIgnoreCase("Ingreso Operativo") || tipo.equalsIgnoreCase("Ingreso No Operativo")) {
+
+						bg.getIngresos().add(nuevaCuenta);
+						bg.escribirInfo();
+
+					}else if (tipo.equalsIgnoreCase("Gasto Operativo") || tipo.equalsIgnoreCase("Gasto No Operativo")) {
+
+						bg.getGastos().add(nuevaCuenta);
+						bg.escribirInfo();
+
+					}else {
+
+						bg.getPatrimonio().add(nuevaCuenta);
+						bg.escribirInfo();
 
 					}
 
 
-					bg.escribirInfo();
-
-				}else if (tipo.equalsIgnoreCase("Pasivo")) {
-
-					for (int i = 0; i < bg.getPasivos().size() && !added; i++) {
-						if (bg.getPasivos().get(i).getNombre().equalsIgnoreCase(nombre)) {
-							bg.getPasivos().get(i).aumentarValor(valor);
-							added = true;
-						}
-					}
-
-					bg.escribirInfo();
-
-				}else if(tipo.equalsIgnoreCase("Patrimonio")){
-
-					for (int i = 0; i < bg.getPatrimonio().size() && !added; i++) {
-						if (bg.getPatrimonio().get(i).getNombre().equalsIgnoreCase(nombre)) {
-							bg.getPatrimonio().get(i).aumentarValor(valor);
-							added = true;
-						}
-					}
-
-					bg.escribirInfo();
-
-				}else if (tipo.equalsIgnoreCase("Ingreso")) {
-					
-					for (int i = 0; i < bg.getIngresos().size() && !added; i++) {
-						if (bg.getIngresos().get(i).getNombre().equalsIgnoreCase(nombre)) {
-							bg.getIngresos().get(i).aumentarValor(valor);
-							added = true;
-						}
-					}
-
-					bg.escribirInfo();
-					
 				}else {
-					
-					for (int i = 0; i < bg.getGastos().size() && !added; i++) {
-						if (bg.getGastos().get(i).getNombre().equalsIgnoreCase(nombre)) {
-							bg.getGastos().get(i).aumentarValor(valor);
-							added = true;
+
+					boolean added = false;
+
+					if (tipo.equalsIgnoreCase("Activo Corriente") || tipo.equalsIgnoreCase("Activo No corriente")) {
+
+						for (int i = 0; i < bg.getActivos().size() && !added; i++) {
+							if (bg.getActivos().get(i).getNombre().equalsIgnoreCase(nombre)) {
+								bg.getActivos().get(i).aumentarValor(valor);
+								added = true;
+							}
+
 						}
+
+
+						bg.escribirInfo();
+
+					}else if (tipo.equalsIgnoreCase("Pasivo Corriente") || tipo.equalsIgnoreCase("Pasivo No corriente")) {
+
+						for (int i = 0; i < bg.getPasivos().size() && !added; i++) {
+							if (bg.getPasivos().get(i).getNombre().equalsIgnoreCase(nombre)) {
+								bg.getPasivos().get(i).aumentarValor(valor);
+								added = true;
+							}
+						}
+
+						bg.escribirInfo();
+
+					}else if(tipo.equalsIgnoreCase("Patrimonio")){
+
+						for (int i = 0; i < bg.getPatrimonio().size() && !added; i++) {
+							if (bg.getPatrimonio().get(i).getNombre().equalsIgnoreCase(nombre)) {
+								bg.getPatrimonio().get(i).aumentarValor(valor);
+								added = true;
+							}
+						}
+
+						bg.escribirInfo();
+
+					}else if (tipo.equalsIgnoreCase("Ingreso Operativo") || tipo.equalsIgnoreCase("Ingreso No Operativo")) {
+
+						for (int i = 0; i < bg.getIngresos().size() && !added; i++) {
+							if (bg.getIngresos().get(i).getNombre().equalsIgnoreCase(nombre)) {
+								bg.getIngresos().get(i).aumentarValor(valor);
+								added = true;
+							}
+						}
+
+						bg.escribirInfo();
+
+					}else {
+
+						for (int i = 0; i < bg.getGastos().size() && !added; i++) {
+							if (bg.getGastos().get(i).getNombre().equalsIgnoreCase(nombre)) {
+								bg.getGastos().get(i).aumentarValor(valor);
+								added = true;
+							}
+						}
+
+						bg.escribirInfo();
+
 					}
 
-					bg.escribirInfo();
-					
 				}
 
+			}else {
+				infoLabelRegistro.setText("Primero debe seleccionar una empresa \nY llenar toda la informacion");
 			}
 
-		}else {
-			infoLabelRegistro.setText("Primero debe seleccionar una empresa \nY llenar toda la informacion");
+		} catch (NumberFormatException e) {
+			
+			infoLabelRegistro.setText("Valor no valido");
+			
 		}
-		
+
+
+
 		nombreCuentaTextField.setText(" ");
 		valorCuentaTextField.setText(" ");
 
@@ -269,11 +262,11 @@ public class BalanceGUI {
 
 	@FXML
 	void agregarCompaniaButton(ActionEvent event) throws IOException {
-		
+
 		if (nuevaCompaniaTextField.getText().equalsIgnoreCase("")) {
 			infoLabelInicio.setText("Ingrese una empresa");
 		}else {
-			
+
 			String nuevaCompania = nuevaCompaniaTextField.getText();
 
 			String ruta = "Data/" + nuevaCompania + ".txt";
@@ -296,9 +289,9 @@ public class BalanceGUI {
 			}else {
 				infoLabelInicio.setText("Empresa existente");
 			}
-			
+
 		}
-	
+
 
 	}
 
@@ -322,6 +315,8 @@ public class BalanceGUI {
 
 			bg.leerInfo();
 
+			infoLabelInicio.setText(" ");
+
 		}
 
 
@@ -343,7 +338,7 @@ public class BalanceGUI {
 		for (int j = 0; j < bg.getActivos().size(); j++) {
 
 
-			if (bg.getActivos().get(j).getClasificacion().equalsIgnoreCase("Corriente")) {
+			if (bg.getActivos().get(j).getTipo().equalsIgnoreCase("Activo Corriente")) {
 
 				Label label = new Label();
 				label.setText("\t\t");
@@ -376,7 +371,7 @@ public class BalanceGUI {
 		for (int j = 0; j < bg.getActivos().size(); j++) {
 
 
-			if (bg.getActivos().get(j).getClasificacion().equalsIgnoreCase("No_corriente")) {
+			if (bg.getActivos().get(j).getTipo().equalsIgnoreCase("Activo No corriente")) {
 
 				Label label = new Label();
 				label.setText("\t\t\t\t\t\t");
@@ -403,10 +398,10 @@ public class BalanceGUI {
 
 	public void generarBalancePasivos() {
 
-		
+
 		GridPane gp2 = new GridPane();
 		pasivosPane.setContent(gp2);;
-		
+
 		int i = 0;
 		Label l1 = new Label();
 		l1.setText("PASIVOS CORRIENTES");
@@ -417,15 +412,15 @@ public class BalanceGUI {
 		for (int j = 0; j < bg.getPasivos().size(); j++) {
 
 
-			if (bg.getPasivos().get(j).getClasificacion().equalsIgnoreCase("Corriente")) {
+			if (bg.getPasivos().get(j).getTipo().equalsIgnoreCase("Pasivo Corriente")) {
 
 				Label label = new Label();
 				label.setText("\t\t");
 				Label label1 = new Label();
 				Label label2 = new Label();
-				
-				
-				
+
+
+
 				label1.setText(bg.getPasivos().get(j).getNombre());
 				String val = String.valueOf(bg.getPasivos().get(j).getValor());
 				label2.setText(val);
@@ -452,7 +447,7 @@ public class BalanceGUI {
 		for (int j = 0; j < bg.getPasivos().size(); j++) {
 
 
-			if (bg.getPasivos().get(j).getClasificacion().equalsIgnoreCase("No_corriente")) {
+			if (bg.getPasivos().get(j).getTipo().equalsIgnoreCase("Pasivo No corriente")) {
 
 				Label label = new Label();
 				label.setText("\t\t\t\t\t\t");
@@ -477,11 +472,11 @@ public class BalanceGUI {
 
 	}
 
-	
+
 	public void generarBalancePatrimonio() {
 
 		GridPane gp3 = new GridPane();
-		
+
 		patrimonioPane.setContent(gp3);
 		int i = 0;
 
@@ -507,9 +502,9 @@ public class BalanceGUI {
 
 
 	}
-	
+
 	public void generarEstadoIngresos() {
-		
+
 		GridPane gp4 = new GridPane();	
 		ingresosPane.setContent(gp4);;
 
@@ -523,7 +518,7 @@ public class BalanceGUI {
 		for (int j = 0; j < bg.getIngresos().size(); j++) {
 
 
-			if (bg.getIngresos().get(j).getClasificacion().equalsIgnoreCase("Operativo")) {
+			if (bg.getIngresos().get(j).getTipo().equalsIgnoreCase("Ingreso Operativo")) {
 
 				Label label = new Label();
 				label.setText("\t\t");
@@ -556,7 +551,7 @@ public class BalanceGUI {
 		for (int j = 0; j < bg.getIngresos().size(); j++) {
 
 
-			if (bg.getIngresos().get(j).getClasificacion().equalsIgnoreCase("No_Operativo")) {
+			if (bg.getIngresos().get(j).getTipo().equalsIgnoreCase("Ingreso No Operativo")) {
 
 				Label label = new Label();
 				label.setText("\t\t\t\t\t\t");
@@ -579,11 +574,11 @@ public class BalanceGUI {
 
 		gp4.add(new Label(String.valueOf(bg.sumarIngresosNoOperativos())), 2, i+1);
 
-		
+
 	}
-	
+
 	public void generarEstadoGastos() {
-		
+
 		GridPane gp4 = new GridPane();	
 		gastosPane.setContent(gp4);;
 
@@ -597,7 +592,7 @@ public class BalanceGUI {
 		for (int j = 0; j < bg.getGastos().size(); j++) {
 
 
-			if (bg.getGastos().get(j).getClasificacion().equalsIgnoreCase("Operativo")) {
+			if (bg.getGastos().get(j).getTipo().equalsIgnoreCase("Gasto Operativo")) {
 
 				Label label = new Label();
 				label.setText("\t\t");
@@ -630,7 +625,7 @@ public class BalanceGUI {
 		for (int j = 0; j < bg.getGastos().size(); j++) {
 
 
-			if (bg.getGastos().get(j).getClasificacion().equalsIgnoreCase("No_Operativo")) {
+			if (bg.getGastos().get(j).getTipo().equalsIgnoreCase("Gasto No Operativo")) {
 
 				Label label = new Label();
 				label.setText("\t\t\t\t\t\t");
@@ -653,46 +648,46 @@ public class BalanceGUI {
 
 		gp4.add(new Label(String.valueOf(bg.sumarGastosNoOperativos())), 2, i+1);
 
-		
+
 	}
-	
+
 	@FXML
-    void update1(ActionEvent event) {
-		
+	void update1(ActionEvent event) {
+
 		if (bg != null) {
-			
+
 			String act = String.valueOf(bg.totalActivos());
 			String pas = String.valueOf(bg.totalPasivos()+bg.sumarPatrimonio());
-			
+
 			generarBalanceActivos();
 			generarBalancePasivos();
 			generarBalancePatrimonio();
-			
+
 			totalActivosLabel.setText(act);
 			totalPasivosPatrimonioLabel.setText(pas);
-			
-		}
-		
-		
-    }
 
-    @FXML
-    void update2(ActionEvent event) {
-    	
-    	if (bg != null) {
-    		String ing = String.valueOf(bg.totalIngresos());
-    		String gas = String.valueOf(bg.totalGastos());
-    		String util = String.valueOf(bg.totalIngresos() - bg.totalGastos());
-    		
-    		generarEstadoIngresos();
-    		generarEstadoGastos();
-    		
-    		totalIngresosLabel.setText(ing);
-    		totalGastosLabel.setText(gas);
-    		
-    		utilidadLabel.setText(util);
+		}
+
+
+	}
+
+	@FXML
+	void update2(ActionEvent event) {
+
+		if (bg != null) {
+			String ing = String.valueOf(bg.totalIngresos());
+			String gas = String.valueOf(bg.totalGastos());
+			String util = String.valueOf(bg.totalIngresos() - bg.totalGastos());
+
+			generarEstadoIngresos();
+			generarEstadoGastos();
+
+			totalIngresosLabel.setText(ing);
+			totalGastosLabel.setText(gas);
+
+			utilidadLabel.setText(util);
 		}    	
-    }
+	}
 
 }
 

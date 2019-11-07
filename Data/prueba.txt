@@ -1,5 +1,0 @@
-activo 4000 Corriente,
-pasivo 4000 Corriente,
-patrimonio 20000 No_Aplica,
-
-

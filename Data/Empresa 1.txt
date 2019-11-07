@@ -1,5 +1,5 @@
-AC 1000 Corriente,ANC 2500 No_corriente,w -4000 Corriente,
-PC 1200 Corriente,PNC 800 No_corriente,
-P 10000 No_Aplica,
-IO 2000 Operativo,INO 100 No_Operativo,
-INO 2700 Operativo,GNO 600 No_Operativo,
+activo1,1000,Activo Corriente;Activo2,1500,Activo Corriente;activo3,400,Activo No Corriente;activo4,700,Activo No Corriente;Depreciacion,-2000,Activo Corriente;
+pasivo1,500,Pasivo Corriente;pasivo3,1000,Pasivo No Corriente;pasivo4,350,Pasivo No Corriente;
+Edificio,100000,Patrimonio;acciones,50000,Patrimonio;
+ingreso1,10000,Ingreso Operativo;ingreso2,5000,Ingreso Operativo;ingreso3,900,Ingreso No Operativo;Ingreso4,200,Ingreso No Operativo;
+gasto1,3000,Gasto Operativo;gasto2,1700,Gasto Operativo;gasto3,1000,Gasto No Operativo;gasto4,850,Gasto No Operativo;

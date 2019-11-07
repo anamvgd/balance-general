@@ -39,7 +39,7 @@ public class BalanceGeneral {
 
 		for (int i = 0; i < activos.size(); i++) {
 
-			if (activos.get(i).getClasificacion().equalsIgnoreCase("Corriente")) {
+			if (activos.get(i).getTipo().equalsIgnoreCase("Activo Corriente")) {
 
 				activo += activos.get(i).getValor();
 
@@ -57,7 +57,7 @@ public class BalanceGeneral {
 
 		for (int i = 0; i < activos.size(); i++) {
 
-			if (activos.get(i).getClasificacion().equalsIgnoreCase("No_Corriente")) {
+			if (activos.get(i).getTipo().equalsIgnoreCase("Activo No Corriente")) {
 
 				activo += activos.get(i).getValor();			
 
@@ -82,7 +82,7 @@ public class BalanceGeneral {
 
 		for (int i = 0; i < pasivos.size(); i++) {
 
-			if (pasivos.get(i).getClasificacion().equalsIgnoreCase("Corriente")) {
+			if (pasivos.get(i).getTipo().equalsIgnoreCase("Pasivo Corriente")) {
 				if (pasivos.get(i).isContraCuenta()) {
 					pasivo -= pasivos.get(i).getValor();
 				}else {
@@ -104,7 +104,7 @@ public class BalanceGeneral {
 
 		for (int i = 0; i < pasivos.size(); i++) {
 
-			if (pasivos.get(i).getClasificacion().equalsIgnoreCase("No_Corriente")) {
+			if (pasivos.get(i).getTipo().equalsIgnoreCase("Pasivo No Corriente")) {
 				if (pasivos.get(i).isContraCuenta()) {
 					pasivo -= pasivos.get(i).getValor();
 				}else {
@@ -150,7 +150,7 @@ public class BalanceGeneral {
 
 		for (int i = 0; i < ingresos.size(); i++) {
 
-			if (ingresos.get(i).getClasificacion().equalsIgnoreCase("Operativo")) {
+			if (ingresos.get(i).getTipo().equalsIgnoreCase("Ingreso Operativo")) {
 
 				ingreso += ingresos.get(i).getValor();
 
@@ -168,7 +168,7 @@ public class BalanceGeneral {
 
 		for (int i = 0; i < ingresos.size(); i++) {
 
-			if (ingresos.get(i).getClasificacion().equalsIgnoreCase("No_Operativo")) {
+			if (ingresos.get(i).getTipo().equalsIgnoreCase("Ingreso No Operativo")) {
 
 				ingreso += ingresos.get(i).getValor();
 
@@ -190,7 +190,7 @@ public class BalanceGeneral {
 
 		for (int i = 0; i < gastos.size(); i++) {
 
-			if (gastos.get(i).getClasificacion().equalsIgnoreCase("Operativo")) {
+			if (gastos.get(i).getTipo().equalsIgnoreCase("Gasto Operativo")) {
 
 				gasto += gastos.get(i).getValor();
 
@@ -208,7 +208,7 @@ public class BalanceGeneral {
 
 		for (int i = 0; i < gastos.size(); i++) {
 
-			if (gastos.get(i).getClasificacion().equalsIgnoreCase("No_Operativo")) {
+			if (gastos.get(i).getTipo().equalsIgnoreCase("Gasto No Operativo")) {
 
 				gasto += gastos.get(i).getValor();
 
@@ -229,11 +229,9 @@ public class BalanceGeneral {
 	public boolean cuentaExistente(String nombre, String tipo) {
 
 		boolean existe = false;
-
-		switch (tipo) {
-
-		case "Activo":
-
+		
+		if (tipo.equalsIgnoreCase("Activo Corriente") || tipo.equalsIgnoreCase("Activo No corriente")) {
+			
 			for (int i = 0; i < activos.size() && !existe; i++) {
 
 				if (activos.get(i).getNombre().equalsIgnoreCase(nombre)) {
@@ -241,11 +239,9 @@ public class BalanceGeneral {
 				}
 
 			}
-
-			break;
-
-		case "Pasivo":
-
+			
+		}else if (tipo.equalsIgnoreCase("Pasivo Corriente") || tipo.equalsIgnoreCase("Pasivo No corriente")) {
+			
 			for (int i = 0; i < pasivos.size() && !existe; i++) {
 
 				if (pasivos.get(i).getNombre().equalsIgnoreCase(nombre)) {
@@ -254,10 +250,8 @@ public class BalanceGeneral {
 
 			}
 
-			break;
-
-		case "Ingreso":
-
+		}else if (tipo.equalsIgnoreCase("Ingreso Operativo") || tipo.equalsIgnoreCase("Ingreso No Operativo")) {
+			
 			for (int i = 0; i < ingresos.size() && !existe; i++) {
 
 				if (ingresos.get(i).getNombre().equalsIgnoreCase(nombre)) {
@@ -265,11 +259,9 @@ public class BalanceGeneral {
 				}
 
 			}
-
-			break;
-
-		case "Gasto":
-
+			
+		}else if (tipo.equalsIgnoreCase("Gasto Operativo") || tipo.equalsIgnoreCase("Gasto No Operativo")) {
+			
 			for (int i = 0; i < gastos.size() && !existe; i++) {
 
 				if (gastos.get(i).getNombre().equalsIgnoreCase(nombre)) {
@@ -277,11 +269,9 @@ public class BalanceGeneral {
 				}
 
 			}
-
-			break;
-
-		default:
-
+			
+		}else {
+			
 			for (int i = 0; i < patrimonio.size() && !existe; i++) {
 
 				if (patrimonio.get(i).getNombre().equalsIgnoreCase(nombre)) {
@@ -289,8 +279,7 @@ public class BalanceGeneral {
 				}
 
 			}
-
-			break;
+			
 		}
 
 		return existe;
@@ -331,35 +320,54 @@ public class BalanceGeneral {
 		BufferedWriter bw = new BufferedWriter(fileWriter);
 		PrintWriter out = new PrintWriter(bw);
 
-		for (int i = 0; i < activos.size(); i++) {
-			out.print(activos.get(i).getNombre() + " " + activos.get(i).getValor() + " " + activos.get(i).getClasificacion() + ",");
+		if (activos.size() != 0) {
+
+			for (int i = 0; i < activos.size(); i++) {
+				out.print(activos.get(i).getNombre() + "," + activos.get(i).getValor() + "," + activos.get(i).getTipo() + ";");
+			}
+
+			out.println();
+
 		}
 
-		out.println();
+		if (pasivos.size() != 0) {
 
-		for (int i = 0; i < pasivos.size(); i++) {
-			out.print(pasivos.get(i).getNombre() + " " + pasivos.get(i).getValor() + " " + pasivos.get(i).getClasificacion() + ",");
+			for (int i = 0; i < pasivos.size(); i++) {
+				out.print(pasivos.get(i).getNombre() + "," + pasivos.get(i).getValor() + "," + pasivos.get(i).getTipo() + ";");
+			}
+
+			out.println();
+
 		}
 
-		out.println();
+		if (patrimonio.size() != 0) {
 
-		for (int i = 0; i < patrimonio.size(); i++) {
-			out.print(patrimonio.get(i).getNombre() + " " + patrimonio.get(i).getValor() + " " + "No_Aplica" + ",");
+			for (int i = 0; i < patrimonio.size(); i++) {
+				out.print(patrimonio.get(i).getNombre() + "," + patrimonio.get(i).getValor() + "," + patrimonio.get(i).getTipo() + ";");
+			}
+
+			out.println();
+
 		}
 
-		out.println();
-		
-		for (int i = 0; i < ingresos.size(); i++) {
-			out.print(ingresos.get(i).getNombre() + " " + ingresos.get(i).getValor() + " " + ingresos.get(i).getClasificacion() + ",");
+		if (ingresos.size() != 0) {
+
+			for (int i = 0; i < ingresos.size(); i++) {
+				out.print(ingresos.get(i).getNombre() + "," + ingresos.get(i).getValor() + "," + ingresos.get(i).getTipo() + ";");
+			}
+
+			out.println();
+
 		}
 
-		out.println();
-		
-		for (int i = 0; i < gastos.size(); i++) {
-			out.print(gastos.get(i).getNombre() + " " + gastos.get(i).getValor() + " " + gastos.get(i).getClasificacion() + ",");
-		}
+		if (gastos.size() != 0) {
 
-		out.println();
+			for (int i = 0; i < gastos.size(); i++) {
+				out.print(gastos.get(i).getNombre() + "," + gastos.get(i).getValor() + "," + gastos.get(i).getTipo() + ";");
+			}
+
+
+		}		
 
 		out.close();
 	}
@@ -373,22 +381,22 @@ public class BalanceGeneral {
 
 		if (line != null) {
 
-			String[] parts = line.split(",");
+			String[] parts = line.split(";");
 			StringTokenizer st;
 
 			for (int i = 0; i < parts.length; i++) {
 
-				st = new StringTokenizer(parts[i]);
+				st = new StringTokenizer(parts[i], ",");
 
 				String nombreCuenta = st.nextToken();
 				int valorCuenta = Integer.valueOf(st.nextToken());
-				String clasificacionCuenta = st.nextToken();
+				String tipo = st.nextToken();
 				boolean contra = false;
 				if (valorCuenta < 0) {
 					contra = true;
 				}
 
-				Cuenta nuevaCuenta = new Cuenta(nombreCuenta, "Activo", valorCuenta, clasificacionCuenta, contra);
+				Cuenta nuevaCuenta = new Cuenta(nombreCuenta, tipo, valorCuenta, contra);
 
 				activos.add(nuevaCuenta);
 
@@ -401,22 +409,22 @@ public class BalanceGeneral {
 
 		if (line != null) {
 
-			String[] parts = line.split(",");
+			String[] parts = line.split(";");
 			StringTokenizer st;
 
 			for (int i = 0; i < parts.length; i++) {
 
-				st = new StringTokenizer(parts[i]);
+				st = new StringTokenizer(parts[i], ",");
 
 				String nombreCuenta = st.nextToken();
 				int valorCuenta = Integer.valueOf(st.nextToken());
-				String clasificacionCuenta = st.nextToken();
+				String tipo = st.nextToken();
 				boolean contra = false;
 				if (valorCuenta < 0) {
 					contra = true;
 				}
 
-				Cuenta nuevaCuenta = new Cuenta(nombreCuenta, "Pasivo", valorCuenta, clasificacionCuenta, contra);
+				Cuenta nuevaCuenta = new Cuenta(nombreCuenta, tipo, valorCuenta, contra);
 
 				pasivos.add(nuevaCuenta);
 
@@ -429,76 +437,76 @@ public class BalanceGeneral {
 
 		if (line != null) {
 
-			String[] parts = line.split(",");
+			String[] parts = line.split(";");
 			StringTokenizer st;
 
 			for (int i = 0; i < parts.length; i++) {
 
-				st = new StringTokenizer(parts[i]);
+				st = new StringTokenizer(parts[i], ",");
 
 				String nombreCuenta = st.nextToken();
 				int valorCuenta = Integer.valueOf(st.nextToken());
-				String clasificacionCuenta = st.nextToken();
+				String tipo = st.nextToken();
 				boolean contra = false;
 				if (valorCuenta < 0) {
 					contra = true;
 				}
 
-				Cuenta nuevaCuenta = new Cuenta(nombreCuenta, "Patrimonio", valorCuenta, clasificacionCuenta, contra);
+				Cuenta nuevaCuenta = new Cuenta(nombreCuenta, tipo, valorCuenta, contra);
 
 				patrimonio.add(nuevaCuenta);
 
 			}
 
 		}
-		
+
 		line = br.readLine();
 
 		if (line != null) {
 
-			String[] parts = line.split(",");
+			String[] parts = line.split(";");
 			StringTokenizer st;
 
 			for (int i = 0; i < parts.length; i++) {
 
-				st = new StringTokenizer(parts[i]);
+				st = new StringTokenizer(parts[i], ",");
 
 				String nombreCuenta = st.nextToken();
 				int valorCuenta = Integer.valueOf(st.nextToken());
-				String clasificacionCuenta = st.nextToken();
+				String tipo = st.nextToken();
 				boolean contra = false;
 				if (valorCuenta < 0) {
 					contra = true;
 				}
 
-				Cuenta nuevaCuenta = new Cuenta(nombreCuenta, "Ingreso", valorCuenta, clasificacionCuenta, contra);
+				Cuenta nuevaCuenta = new Cuenta(nombreCuenta, tipo, valorCuenta, contra);
 
 				ingresos.add(nuevaCuenta);
 
 			}
 
 		}
-		
+
 		line = br.readLine();
 
 		if (line != null) {
 
-			String[] parts = line.split(",");
+			String[] parts = line.split(";");
 			StringTokenizer st;
 
 			for (int i = 0; i < parts.length; i++) {
 
-				st = new StringTokenizer(parts[i]);
+				st = new StringTokenizer(parts[i], ",");
 
 				String nombreCuenta = st.nextToken();
 				int valorCuenta = Integer.valueOf(st.nextToken());
-				String clasificacionCuenta = st.nextToken();
+				String tipo = st.nextToken();
 				boolean contra = false;
 				if (valorCuenta < 0) {
 					contra = true;
 				}
 
-				Cuenta nuevaCuenta = new Cuenta(nombreCuenta, "Gasto", valorCuenta, clasificacionCuenta, contra);
+				Cuenta nuevaCuenta = new Cuenta(nombreCuenta, tipo, valorCuenta, contra);
 
 				gastos.add(nuevaCuenta);
 
